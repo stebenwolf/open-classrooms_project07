@@ -151,6 +151,7 @@ fetchDataAsync().then(recipes => {
             console.log("results, avant : ", results);
             results = results.concat(matchingIngredients(input, recipes));
             results = results.concat(matchingRecipeTitle(input, recipes));
+            results = results.concat(matchingDescription(input, recipes));
             console.log("results, après : ", results);
 
             for (let i=0; i<results.length; i++) {
@@ -255,6 +256,25 @@ const matchingIngredients = (input: string, recipes: Array<any>) => {
     return list;
 }
 
+// Cette fonction prend en entrée une liste de recettes (recipes) et un input (le terme recherché), et renvoit la liste des recettes dont la description contient le terme recherché
+const matchingDescription = (input: string, recipes: Array<any>) => {
+    // on créé une variable qui va stocker toutes les recettes correspondantes
+    let list = [];
+
+    // on parcourt toute la liste des recettes
+    for (let i=0; i<recipes.length; i++) {
+        // au sein de chaque recette, on va chercher dans chaque description si celle-ci contient le terme recherché
+        if (recipes[i].description.toLowerCase().includes(input)) {
+            list.push(recipes[i]);
+            // et comme il n'est pas nécessaire d'ajouter plusieurs fois la même recette, on peut sortir de la boucle
+            break;
+        }
+    }
+    console.log(list);
+    return list;
+}
+
+
 
 // Cette fonction prend en entrée une liste de recettes (idéalement, liste déjà filtrée, mais fonctionne avec n'importe quelle liste de résultats) et renvoie l'ensemble des ingrédients utilisés
 const ingredientsOptions = (recipes: Array<any>) => {
@@ -304,3 +324,4 @@ const ustensilsOptions = (recipes: Array<any>) => {
     console.log(list);
     return list;
 }
+
