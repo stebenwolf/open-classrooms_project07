@@ -38,7 +38,7 @@ body {
 }
 
 .card {
-    margin: 0;
+    
     padding: 0;
 }
 
@@ -51,6 +51,24 @@ body {
     justify-content: center;
 }
 
-#ingredientsDataList::placeholder {
+.datalists::placeholder {
     color: white;
+}
+
+#results {
+    margin-top: 10px;
+}
+
+.hashtag {
+    margin: 10px 10px 10px 0;
+    padding: 15px;
+}
+
+.hashtag::after {
+    content: "x";
+    border: 2px solid white;
+    border-radius: 100%;
+    padding: 0px 6px 3px 6px;
+    text-align: center;
+    margin-left: 15px;
 }
