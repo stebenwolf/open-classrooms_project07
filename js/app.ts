@@ -147,12 +147,15 @@ fetchDataAsync().then(recipes => {
             const resultSection = document.getElementById("results");
             // on la vide, au cas où elle contiendrait déjà des informations
             resultSection.innerHTML = "";
-            
-            console.log("results, avant : ", results);
-            results = results.concat(matchingIngredients(input, recipes));
-            results = results.concat(matchingRecipeTitle(input, recipes));
-            results = results.concat(matchingDescription(input, recipes));
-            console.log("results, après : ", results);
+
+            // on souhaite s'assurer qu'une même recette n'est pas ajoutée deux fois...
+            const ingredientsResults = matchingIngredients(input, recipes);
+            const recipeTitleResults = matchingRecipeTitle(input, recipes);
+            const descriptionResults = matchingDescription(input, recipes);
+
+            alreadyIn(results, ingredientsResults);
+            alreadyIn(results, recipeTitleResults);
+            alreadyIn(results, descriptionResults);
 
             for (let i=0; i<results.length; i++) {
                 let recipe = new Recipe(
@@ -167,7 +170,6 @@ fetchDataAsync().then(recipes => {
                 recipe.displayRecipe();
             }
 
-            
             const filteredList = matchingIngredients(input,recipes);
 
             /* const dataListIngredients = document.getElementById("datalistOptions");
@@ -207,15 +209,9 @@ fetchDataAsync().then(recipes => {
                 resultSection.innerHTML = "Aucune recette ne correspond à votre recherche... vous pouvez essayer avec \" tarte aux pommes \", \"poisson\", etc. !";
             }
 
-        } else {
-            /* const resultSection = document.getElementById("results");
-            resultSection.innerHTML = "Aucune recette ne correspond à votre recherche... vous pouvez essayer avec \" tarte aux pommes \", \"poisson\", etc. !"; */
         }
     });
-    //console.log("résultats ", recipes);
-}
-);
-
+});
 
 // Cette fonction prend en entrée une liste de résultats (recipes) et un input (le terme recherché), et renvoie la liste des recettes dont le titre contient l'input 
 const matchingRecipeTitle = (input: string, recipes: Array<any>) => {
@@ -232,7 +228,6 @@ const matchingRecipeTitle = (input: string, recipes: Array<any>) => {
     //console.log("recettes: ",list);
     return list;
 }
-
 
 // Cette fonction prend en entrée une liste de resultats (recipes) et un input (le terme recherché), et renvoit la liste des recettes contenant un ingrédient correspondant
 const matchingIngredients = (input: string, recipes: Array<any>) => {
@@ -274,7 +269,24 @@ const matchingDescription = (input: string, recipes: Array<any>) => {
     return list;
 }
 
-
+// Cette fonction va comparer deux listes et intégrer uniquement les items de la seconde liste absents de la première. Elle prend en entrée la liste à compléter, et la liste à y ajouter, et renvoie la liste complète.
+const alreadyIn = (fullList: Array<any>, addThisList: Array<any>) => {
+    for (let item of addThisList) {
+        console.log("item: ", item);
+        let alreadyIn = 0;
+        for (let i=0; i<fullList.length; i++) {
+            if (fullList[i].id == item.id) {
+                console.log("already in!");
+                alreadyIn = 1;
+                break;
+            }
+        }
+        if (alreadyIn == 0) {
+            fullList.push(item);
+        }
+    }
+    return fullList;
+}
 
 // Cette fonction prend en entrée une liste de recettes (idéalement, liste déjà filtrée, mais fonctionne avec n'importe quelle liste de résultats) et renvoie l'ensemble des ingrédients utilisés
 const ingredientsOptions = (recipes: Array<any>) => {
