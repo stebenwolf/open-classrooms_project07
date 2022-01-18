@@ -44,18 +44,7 @@ fetchDataAsync().then(recipes => {
         }
         console.log(keywords);
     });
-    /* const dataListIngredients = document.getElementById("datalistOptions");
-    for( let i=0; i<liste.length; i++) {
-        const option = document.createElement("option");
-        option.className = "datalistOptions--ingredients";
-        for (let j=0; j<liste[i]["ingredients"].length; j++) {
-            option.value = liste[i]["ingredients"][j]["ingredient"];
-            option.textContent = liste[i]["ingredients"][j]["ingredient"];
-        }
-        dataListIngredients.append(option);
-    } */
-
-
+    
     // toutes les options d'appareil ici
     const selectAppliance = document.getElementById("selectAppliance");
     for (let i=0; i<liste.length; i++) {
@@ -76,14 +65,7 @@ fetchDataAsync().then(recipes => {
         }
         console.log(keywords);
     });
-    /* const dataListAppliances = document.getElementById("datalistApplianceOptions");
-    const appliancesList = appliancesOptions(liste);
-    for (let i=0; i<appliancesList.length; i++) {
-        const option = document.createElement("option");
-        option.value = appliancesList[i];
-        dataListAppliances.append(option);
-    } */
-    
+        
     // toutes les options d'ustensiles enfin ici
     const selectUstensil = document.getElementById("selectUstensil");
     for (let i=0; i<liste.length; i++) {
@@ -106,16 +88,7 @@ fetchDataAsync().then(recipes => {
         }
         console.log(keywords);
     });
-    /* const dataListUstensils = document.getElementById("datalistUstensilsOptions");
-    const ustensilsList = ustensilsOptions(liste);
-    for( let i=0; i<ustensilsList.length; i++) {
-        const option = document.createElement("option");
-        option.value = ustensilsList[i];
-        dataListUstensils.append(option);
-    } */
-
     
-
     // on cible le champ de recherche principal
     const searchInput = document.forms["mainSearch"];
 
@@ -176,41 +149,6 @@ fetchDataAsync().then(recipes => {
                 // et on les affiche 
                 recipe.displayRecipe();
             }
-
-            const filteredList = matchingIngredients(input,recipes);
-
-            /* const dataListIngredients = document.getElementById("datalistOptions");
-            dataListIngredients.innerHTML = "";
-            const ingredientsList = ingredientsOptions(filteredList);
-            
-            for( let i=0; i<ingredientsList.length; i++) {
-                const option = document.createElement("option");
-                option.value = ingredientsList[i]["ingredient"];
-                
-                dataListIngredients.append(option);
-            }
-
-            const dataListAppliances = document.getElementById("datalistApplianceOptions");
-            dataListAppliances.innerHTML = "";
-            const appliancesList = appliancesOptions(filteredList);
-
-            for (let i=0; i<appliancesList.length; i++) {
-                const option = document.createElement("option");
-                option.value = appliancesList[i];
-
-                dataListAppliances.append(option);
-            }
-
-            const dataListUstensils = document.getElementById("datalistUstensilsOptions");
-            dataListUstensils.innerHTML = "";
-            const ustensilsList = ustensilsOptions(filteredList);
-                        
-            for( let i=0; i<ustensilsList.length; i++) {
-                const option = document.createElement("option");
-                option.value = ustensilsList[i];
-                
-                dataListUstensils.append(option);
-            } */
 
             if (results.length == 0) {
                 resultSection.innerHTML = "Aucune recette ne correspond à votre recherche... vous pouvez essayer avec \" tarte aux pommes \", \"poisson\", etc. !";
