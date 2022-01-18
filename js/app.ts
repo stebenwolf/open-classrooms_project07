@@ -15,7 +15,6 @@ async function fetchDataAsync() {
 
 fetchDataAsync().then(recipes => {
 
-
     // on commence par ajouter à chaque "input" la liste de toutes les options
     const liste = matchingIngredients("",recipes);
 
@@ -25,12 +24,12 @@ fetchDataAsync().then(recipes => {
     // toutes les options d'ingrédients ici
     const selectIngredient = document.getElementById("selectIngredient");
     for (let i=0; i<liste.length; i++) {
-        const option = document.createElement("option");
         for (let j=0; j<liste[i]["ingredients"].length; j++) {
+            const option = document.createElement("option");
             option.value = liste[i]['ingredients'][j]["ingredient"];
             option.textContent = option.value;
+            selectIngredient.append(option);
         }
-        selectIngredient.append(option);
     }
 
     selectIngredient.addEventListener("change", (event) => {
@@ -113,6 +112,49 @@ fetchDataAsync().then(recipes => {
 
         // on stocke la valeur recherchée par l'utilisateur dans une variable
         const input = element.target.value.toLowerCase();
+
+        let filteredList = [];
+        // on souhaite s'assurer qu'une même recette n'est pas ajoutée deux fois...
+        // on commence par créer les différentes listes à afficher
+        const ingredientsResults = matchingIngredients(input, recipes);
+        const recipeTitleResults = matchingRecipeTitle(input, recipes);
+        const descriptionResults = matchingDescription(input, recipes);
+
+        // on va ensuite ajouter l'une après l'autre les résultats des différents filtres à la liste principale
+        alreadyIn(filteredList, ingredientsResults);
+        alreadyIn(filteredList, recipeTitleResults);
+        alreadyIn(filteredList, descriptionResults);
+        
+        const selectIngredient = document.getElementById("selectIngredient");
+        selectIngredient.innerHTML = "<option value=\"\" selected disabled hidden>Ingrédients</option>\"";
+        for (let i=0; i<filteredList.length; i++) {
+            for (let j=0; j<filteredList[i]["ingredients"].length; j++) {
+                const option = document.createElement("option");
+                option.value = filteredList[i]['ingredients'][j]["ingredient"];
+                option.textContent = option.value;
+                selectIngredient.append(option);
+            }
+        }
+
+        const selectAppliance = document.getElementById("selectAppliance");
+        selectAppliance.innerHTML = "<option value=\"\" selected disabled hidden>Appareil</option>\"";
+        for (let i=0; i<filteredList.length; i++) {
+            const option = document.createElement("option");
+            option.value = filteredList[i]["appliance"];
+            option.textContent = option.value;
+            selectAppliance.append(option);
+        }
+
+        const selectUstensil = document.getElementById("selectUstensil");
+        selectUstensil.innerHTML = "<option value=\"\" selected disabled hidden>Ustensiles</option>\"";
+        for (let i=0; i<filteredList.length; i++) {
+            for (let j=0; j<filteredList[i]["ustensils"].length; j++) {
+                const option = document.createElement("option");
+                option.value = filteredList[i]["ustensils"][j];
+                option.textContent = option.value;
+                selectUstensil.append(option);
+            }
+        }
 
         // si la taille de l'input est >3 caractères, on va lancer une recherche, sinon, on ne fait rien
         if (input.length >= 3) {

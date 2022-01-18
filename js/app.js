@@ -1,3 +1,4 @@
+// Cette version du code s'intéresse au développement d'un algorithme "natif", c'est-à-dire qu'on utilisera uniquement des fonctions JS natives (<ES6?). Dans une seconde branche, on déploiera les mêmes fonctionnalités mais avec des fonctionnalités spécifiques aux listes (forEach, map, reduce, ...).
 import { Recipe } from "./recipe.js";
 async function fetchDataAsync() {
     try {
@@ -17,12 +18,12 @@ fetchDataAsync().then(recipes => {
     // toutes les options d'ingrédients ici
     const selectIngredient = document.getElementById("selectIngredient");
     for (let i = 0; i < liste.length; i++) {
-        const option = document.createElement("option");
         for (let j = 0; j < liste[i]["ingredients"].length; j++) {
+            const option = document.createElement("option");
             option.value = liste[i]['ingredients'][j]["ingredient"];
             option.textContent = option.value;
+            selectIngredient.append(option);
         }
-        selectIngredient.append(option);
     }
     selectIngredient.addEventListener("change", (event) => {
         const hashtags = document.getElementById("hashtags");
@@ -35,16 +36,6 @@ fetchDataAsync().then(recipes => {
         }
         console.log(keywords);
     });
-    /* const dataListIngredients = document.getElementById("datalistOptions");
-    for( let i=0; i<liste.length; i++) {
-        const option = document.createElement("option");
-        option.className = "datalistOptions--ingredients";
-        for (let j=0; j<liste[i]["ingredients"].length; j++) {
-            option.value = liste[i]["ingredients"][j]["ingredient"];
-            option.textContent = liste[i]["ingredients"][j]["ingredient"];
-        }
-        dataListIngredients.append(option);
-    } */
     // toutes les options d'appareil ici
     const selectAppliance = document.getElementById("selectAppliance");
     for (let i = 0; i < liste.length; i++) {
@@ -64,13 +55,6 @@ fetchDataAsync().then(recipes => {
         }
         console.log(keywords);
     });
-    /* const dataListAppliances = document.getElementById("datalistApplianceOptions");
-    const appliancesList = appliancesOptions(liste);
-    for (let i=0; i<appliancesList.length; i++) {
-        const option = document.createElement("option");
-        option.value = appliancesList[i];
-        dataListAppliances.append(option);
-    } */
     // toutes les options d'ustensiles enfin ici
     const selectUstensil = document.getElementById("selectUstensil");
     for (let i = 0; i < liste.length; i++) {
@@ -92,15 +76,9 @@ fetchDataAsync().then(recipes => {
         }
         console.log(keywords);
     });
-    /* const dataListUstensils = document.getElementById("datalistUstensilsOptions");
-    const ustensilsList = ustensilsOptions(liste);
-    for( let i=0; i<ustensilsList.length; i++) {
-        const option = document.createElement("option");
-        option.value = ustensilsList[i];
-        dataListUstensils.append(option);
-    } */
     // on cible le champ de recherche principal
     const searchInput = document.forms["mainSearch"];
+    // on affiche l'ensemble des recettes de la base de données
     for (let i = 0; i < recipes.length; i++) {
         let recipe = new Recipe(recipes[i].id, recipes[i].name, recipes[i].ingredients, recipes[i].time, recipes[i].description, recipes[i].appliance, recipes[i].ustensils);
         recipe.displayRecipe();
@@ -111,6 +89,44 @@ fetchDataAsync().then(recipes => {
         console.log();
         // on stocke la valeur recherchée par l'utilisateur dans une variable
         const input = element.target.value.toLowerCase();
+        let filteredList = [];
+        // on souhaite s'assurer qu'une même recette n'est pas ajoutée deux fois...
+        // on commence par créer les différentes listes à afficher
+        const ingredientsResults = matchingIngredients(input, recipes);
+        const recipeTitleResults = matchingRecipeTitle(input, recipes);
+        const descriptionResults = matchingDescription(input, recipes);
+        // on va ensuite ajouter l'une après l'autre les résultats des différents filtres à la liste principale
+        alreadyIn(filteredList, ingredientsResults);
+        alreadyIn(filteredList, recipeTitleResults);
+        alreadyIn(filteredList, descriptionResults);
+        const selectIngredient = document.getElementById("selectIngredient");
+        selectIngredient.innerHTML = "<option value=\"\" selected disabled hidden>Ingrédients</option>\"";
+        for (let i = 0; i < filteredList.length; i++) {
+            for (let j = 0; j < filteredList[i]["ingredients"].length; j++) {
+                const option = document.createElement("option");
+                option.value = filteredList[i]['ingredients'][j]["ingredient"];
+                option.textContent = option.value;
+                selectIngredient.append(option);
+            }
+        }
+        const selectAppliance = document.getElementById("selectAppliance");
+        selectAppliance.innerHTML = "<option value=\"\" selected disabled hidden>Appareil</option>\"";
+        for (let i = 0; i < filteredList.length; i++) {
+            const option = document.createElement("option");
+            option.value = filteredList[i]["appliance"];
+            option.textContent = option.value;
+            selectAppliance.append(option);
+        }
+        const selectUstensil = document.getElementById("selectUstensil");
+        selectUstensil.innerHTML = "<option value=\"\" selected disabled hidden>Ustensiles</option>\"";
+        for (let i = 0; i < filteredList.length; i++) {
+            for (let j = 0; j < filteredList[i]["ustensils"].length; j++) {
+                const option = document.createElement("option");
+                option.value = filteredList[i]["ustensils"][j];
+                option.textContent = option.value;
+                selectUstensil.append(option);
+            }
+        }
         // si la taille de l'input est >3 caractères, on va lancer une recherche, sinon, on ne fait rien
         if (input.length >= 3) {
             let results = [];
@@ -119,49 +135,20 @@ fetchDataAsync().then(recipes => {
             // on la vide, au cas où elle contiendrait déjà des informations
             resultSection.innerHTML = "";
             // on souhaite s'assurer qu'une même recette n'est pas ajoutée deux fois...
+            // on commence par créer les différentes listes à afficher
             const ingredientsResults = matchingIngredients(input, recipes);
             const recipeTitleResults = matchingRecipeTitle(input, recipes);
             const descriptionResults = matchingDescription(input, recipes);
+            // on va ensuite ajouter l'une après l'autre les résultats des différents filtres à la liste principale
             alreadyIn(results, ingredientsResults);
             alreadyIn(results, recipeTitleResults);
             alreadyIn(results, descriptionResults);
+            // à présent qu'on a une liste "épurée", on va créer les objets associés
             for (let i = 0; i < results.length; i++) {
                 let recipe = new Recipe(results[i].id, results[i].name, results[i].ingredients, results[i].time, results[i].description, results[i].appliance, results[i].ustensils);
+                // et on les affiche 
                 recipe.displayRecipe();
             }
-            const filteredList = matchingIngredients(input, recipes);
-            /* const dataListIngredients = document.getElementById("datalistOptions");
-            dataListIngredients.innerHTML = "";
-            const ingredientsList = ingredientsOptions(filteredList);
-            
-            for( let i=0; i<ingredientsList.length; i++) {
-                const option = document.createElement("option");
-                option.value = ingredientsList[i]["ingredient"];
-                
-                dataListIngredients.append(option);
-            }
-
-            const dataListAppliances = document.getElementById("datalistApplianceOptions");
-            dataListAppliances.innerHTML = "";
-            const appliancesList = appliancesOptions(filteredList);
-
-            for (let i=0; i<appliancesList.length; i++) {
-                const option = document.createElement("option");
-                option.value = appliancesList[i];
-
-                dataListAppliances.append(option);
-            }
-
-            const dataListUstensils = document.getElementById("datalistUstensilsOptions");
-            dataListUstensils.innerHTML = "";
-            const ustensilsList = ustensilsOptions(filteredList);
-                        
-            for( let i=0; i<ustensilsList.length; i++) {
-                const option = document.createElement("option");
-                option.value = ustensilsList[i];
-                
-                dataListUstensils.append(option);
-            } */
             if (results.length == 0) {
                 resultSection.innerHTML = "Aucune recette ne correspond à votre recherche... vous pouvez essayer avec \" tarte aux pommes \", \"poisson\", etc. !";
             }
