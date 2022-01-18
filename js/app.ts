@@ -1,3 +1,5 @@
+// Cette version du code s'intéresse au développement d'un algorithme "natif", c'est-à-dire qu'on utilisera uniquement des fonctions JS natives (<ES6?). Dans une seconde branche, on déploiera les mêmes fonctionnalités mais avec des fonctionnalités spécifiques aux listes (forEach, map, reduce, ...).
+
 import { Recipe } from "./recipe.js";
 
 async function fetchDataAsync() {
@@ -117,6 +119,7 @@ fetchDataAsync().then(recipes => {
     // on cible le champ de recherche principal
     const searchInput = document.forms["mainSearch"];
 
+    // on affiche l'ensemble des recettes de la base de données
     for (let i=0; i<recipes.length; i++) {
         let recipe = new Recipe(
             recipes[i].id,
@@ -149,14 +152,17 @@ fetchDataAsync().then(recipes => {
             resultSection.innerHTML = "";
 
             // on souhaite s'assurer qu'une même recette n'est pas ajoutée deux fois...
+            // on commence par créer les différentes listes à afficher
             const ingredientsResults = matchingIngredients(input, recipes);
             const recipeTitleResults = matchingRecipeTitle(input, recipes);
             const descriptionResults = matchingDescription(input, recipes);
 
+            // on va ensuite ajouter l'une après l'autre les résultats des différents filtres à la liste principale
             alreadyIn(results, ingredientsResults);
             alreadyIn(results, recipeTitleResults);
             alreadyIn(results, descriptionResults);
 
+            // à présent qu'on a une liste "épurée", on va créer les objets associés
             for (let i=0; i<results.length; i++) {
                 let recipe = new Recipe(
                     results[i].id,
@@ -167,6 +173,7 @@ fetchDataAsync().then(recipes => {
                     results[i].appliance,
                     results[i].ustensils
                 );
+                // et on les affiche 
                 recipe.displayRecipe();
             }
 
