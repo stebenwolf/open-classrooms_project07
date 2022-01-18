@@ -44,10 +44,11 @@ fetchDataAsync().then(recipes => {
     });
     
     // toutes les options d'appareil ici
+    const uniqueAppliancesOnly = uniqueAppliances(liste);
     const selectAppliance = document.getElementById("selectAppliance");
-    for (let i=0; i<liste.length; i++) {
+    for (let i=0; i<uniqueAppliancesOnly.length; i++) {
         const option = document.createElement("option");
-        option.value = liste[i]["appliance"];
+        option.value = uniqueAppliancesOnly[i][0].toUpperCase() + uniqueAppliancesOnly[i].substring(1);
         option.textContent = option.value;
         selectAppliance.append(option);
     }
@@ -65,13 +66,12 @@ fetchDataAsync().then(recipes => {
     });
         
     // toutes les options d'ustensiles enfin ici
+    const uniqueUstensilsOnly = uniqueUstensils(liste);
     const selectUstensil = document.getElementById("selectUstensil");
-    for (let i=0; i<liste.length; i++) {
+    for (let i=0; i<uniqueUstensilsOnly.length; i++) {
         const option = document.createElement("option");
-        for (let j=0; j<liste[i]["ustensils"].length; j++) {
-            option.value = liste[i]['ustensils'][j];
-            option.textContent = option.value;
-        }
+        option.value = uniqueUstensilsOnly[i][0].toUpperCase() +uniqueUstensilsOnly[i].substring(1);
+        option.textContent = option.value;
         selectUstensil.append(option);
     }
     // et on ajoute un event listener : dès qu'on clique sur une option, on créé un hashtag avec l'option choisie
@@ -174,6 +174,7 @@ fetchDataAsync().then(recipes => {
             alreadyIn(results, ingredientsResults);
             alreadyIn(results, recipeTitleResults);
             alreadyIn(results, descriptionResults);
+            results = sortById(results);
 
             // à présent qu'on a une liste "épurée", on va créer les objets associés
             for (let i=0; i<results.length; i++) {
@@ -271,7 +272,7 @@ const alreadyIn = (fullList: Array<any>, addThisList: Array<any>) => {
 
 // Cette fonction va prendre en entrée une liste de recettes et va renvoyer une liste débarrasée des ingrédients doublons
 const uniqueIngredients = (recipesList: Array<any>) => {
-    const uniqueIngredientsOnly = [];
+    let uniqueIngredientsOnly = [];
     for (let item of recipesList) {
         for (let i=0; i<item["ingredients"].length; i++) {
             if (!uniqueIngredientsOnly.includes(item["ingredients"][i].ingredient.toLowerCase())) {
@@ -279,11 +280,12 @@ const uniqueIngredients = (recipesList: Array<any>) => {
             }
         }
     }
+    uniqueIngredientsOnly = sortByName(uniqueIngredientsOnly);
     return uniqueIngredientsOnly;
 }
 // idem, avec la liste des appareils
 const uniqueAppliances = (recipesList: Array<any>) => {
-    const uniqueAppliancesOnly = [];
+    let uniqueAppliancesOnly = [];
     for (let item of recipesList) {
         for (let i=0; i<item["appliance"].length; i++) {
             if (!uniqueAppliancesOnly.includes(item["appliance"].toLowerCase())) {
@@ -291,11 +293,12 @@ const uniqueAppliances = (recipesList: Array<any>) => {
             }
         }
     }
+    uniqueAppliancesOnly = sortByName(uniqueAppliancesOnly);
     return uniqueAppliancesOnly;
 }
 // et encore idem, avec la liste des ustensiles
 const uniqueUstensils = (recipesList: Array<any>) => {
-    const uniqueUstensilsOnly = [];
+    let uniqueUstensilsOnly = [];
     for (let item of recipesList) {
         for (let i=0; i<item["ustensils"].length; i++) {
             if (!uniqueUstensilsOnly.includes(item["ustensils"][i].toLowerCase())) {
@@ -303,7 +306,30 @@ const uniqueUstensils = (recipesList: Array<any>) => {
             }
         }
     }
+    uniqueUstensilsOnly = sortByName(uniqueUstensilsOnly);
     return uniqueUstensilsOnly;
+}
+
+// On souhaite à présent pouvoir trier nos différentes listes : recettes par id; ingrédients, appareil, ustensiles par ordre alphabétique
+
+// Cette fonction prend en entrée une liste et renvoie la liste triée par id par ordre croissant
+const sortById = (list: Array<any>) => {
+    const byLikes = list.slice(0); // on copie la liste initiale
+    byLikes.sort(function(a: {id : number }, b: {id : number }) {
+        return a.id - b.id; // on trie la nouvelle liste par ordre décroissant
+    });
+    return byLikes;
+}
+
+// cette fonction prend en entrée une liste et renvoie la liste triée par ordre alphabétique croissant
+const sortByName = (list: Array<any>) => {
+    const byName = list.slice(0);
+    byName.sort(function(a: string, b: string) {
+        const x = a.toLowerCase();
+        const y = b.toLowerCase();
+        return x < y ? -1 : x > y ? 1 : 0;
+    });
+    return byName;
 }
 
 // Cette fonction prend en entrée une liste de recettes (idéalement, liste déjà filtrée, mais fonctionne avec n'importe quelle liste de résultats) et renvoie l'ensemble des ingrédients utilisés
