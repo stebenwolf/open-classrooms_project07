@@ -2,7 +2,7 @@
 import { Recipe } from "./recipe.js";
 async function fetchDataAsync() {
     try {
-        const response = await fetch("../assets/recipes.json");
+        const response = await fetch("/assets/recipes.json");
         const data = await response.json();
         return data["recipes"];
     }
