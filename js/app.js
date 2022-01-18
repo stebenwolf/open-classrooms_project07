@@ -25,6 +25,7 @@ fetchDataAsync().then(recipes => {
             selectIngredient.append(option);
         }
     }
+    // et on ajoute un event listener : dès qu'on clique sur une option, on créé un hashtag avec l'option choisie
     selectIngredient.addEventListener("change", (event) => {
         const hashtags = document.getElementById("hashtags");
         const hashtag = document.createElement("span");
@@ -44,6 +45,7 @@ fetchDataAsync().then(recipes => {
         option.textContent = option.value;
         selectAppliance.append(option);
     }
+    // et on ajoute un event listener : dès qu'on clique sur une option, on créé un hashtag avec l'option choisie
     selectAppliance.addEventListener("change", (event) => {
         const hashtags = document.getElementById("hashtags");
         const hashtag = document.createElement("span");
@@ -65,6 +67,7 @@ fetchDataAsync().then(recipes => {
         }
         selectUstensil.append(option);
     }
+    // et on ajoute un event listener : dès qu'on clique sur une option, on créé un hashtag avec l'option choisie
     selectUstensil.addEventListener("change", (event) => {
         const hashtags = document.getElementById("hashtags");
         const hashtag = document.createElement("span");
