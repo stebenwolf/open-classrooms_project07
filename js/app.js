@@ -214,17 +214,14 @@ const matchingDescription = (input, recipes) => {
             break;
         }
     }
-    console.log(list);
     return list;
 };
 // Cette fonction va comparer deux listes et intégrer uniquement les items de la seconde liste absents de la première. Elle prend en entrée la liste à compléter, et la liste à y ajouter, et renvoie la liste complète.
 const alreadyIn = (fullList, addThisList) => {
     for (let item of addThisList) {
-        console.log("item: ", item);
         let alreadyIn = 0;
         for (let i = 0; i < fullList.length; i++) {
             if (fullList[i].id == item.id) {
-                console.log("already in!");
                 alreadyIn = 1;
                 break;
             }
