@@ -16,14 +16,13 @@ fetchDataAsync().then(recipes => {
     // on créé ensuite une variable qui va stocker les mots-clés retenus
     const keywords = [];
     // toutes les options d'ingrédients ici
+    const uniqueIngredientsOnly = uniqueIngredients(liste);
     const selectIngredient = document.getElementById("selectIngredient");
-    for (let i = 0; i < liste.length; i++) {
-        for (let j = 0; j < liste[i]["ingredients"].length; j++) {
-            const option = document.createElement("option");
-            option.value = liste[i]['ingredients'][j]["ingredient"];
-            option.textContent = option.value;
-            selectIngredient.append(option);
-        }
+    for (let i = 0; i < uniqueIngredientsOnly.length; i++) {
+        const option = document.createElement("option");
+        option.value = uniqueIngredientsOnly[i][0].toUpperCase() + uniqueIngredientsOnly[i].substring(1);
+        option.textContent = option.value;
+        selectIngredient.append(option);
     }
     // et on ajoute un event listener : dès qu'on clique sur une option, on créé un hashtag avec l'option choisie
     selectIngredient.addEventListener("change", (event) => {
@@ -102,35 +101,34 @@ fetchDataAsync().then(recipes => {
         alreadyIn(filteredList, ingredientsResults);
         alreadyIn(filteredList, recipeTitleResults);
         alreadyIn(filteredList, descriptionResults);
+        const listOfUniqueIngredients = uniqueIngredients(filteredList);
         const selectIngredient = document.getElementById("selectIngredient");
         selectIngredient.innerHTML = "<option value=\"\" selected disabled hidden>Ingrédients</option>\"";
-        for (let i = 0; i < filteredList.length; i++) {
-            for (let j = 0; j < filteredList[i]["ingredients"].length; j++) {
-                const option = document.createElement("option");
-                option.value = filteredList[i]['ingredients'][j]["ingredient"];
-                option.textContent = option.value;
-                selectIngredient.append(option);
-            }
+        for (let i = 0; i < listOfUniqueIngredients.length; i++) {
+            const option = document.createElement("option");
+            option.value = listOfUniqueIngredients[i][0].toUpperCase() + listOfUniqueIngredients[i].substring(1);
+            option.textContent = option.value;
+            selectIngredient.append(option);
         }
+        const listOfUniqueAppliances = uniqueAppliances(filteredList);
         const selectAppliance = document.getElementById("selectAppliance");
         selectAppliance.innerHTML = "<option value=\"\" selected disabled hidden>Appareil</option>\"";
-        for (let i = 0; i < filteredList.length; i++) {
+        for (let i = 0; i < listOfUniqueAppliances.length; i++) {
             const option = document.createElement("option");
-            option.value = filteredList[i]["appliance"];
+            option.value = listOfUniqueAppliances[i][0].toUpperCase() + listOfUniqueAppliances[i].substring(1);
             option.textContent = option.value;
             selectAppliance.append(option);
         }
+        const listOfUniqueUstensils = uniqueUstensils(filteredList);
         const selectUstensil = document.getElementById("selectUstensil");
         selectUstensil.innerHTML = "<option value=\"\" selected disabled hidden>Ustensiles</option>\"";
-        for (let i = 0; i < filteredList.length; i++) {
-            for (let j = 0; j < filteredList[i]["ustensils"].length; j++) {
-                const option = document.createElement("option");
-                option.value = filteredList[i]["ustensils"][j];
-                option.textContent = option.value;
-                selectUstensil.append(option);
-            }
+        for (let i = 0; i < listOfUniqueUstensils.length; i++) {
+            const option = document.createElement("option");
+            option.value = listOfUniqueUstensils[i][0].toUpperCase() + listOfUniqueUstensils[i].substring(1);
+            option.textContent = option.value;
+            selectUstensil.append(option);
         }
-        // si la taille de l'input est >3 caractères, on va lancer une recherche, sinon, on ne fait rien
+        // si la taille de l'input est >=3 caractères, on va lancer une recherche, sinon, on ne fait rien
         if (input.length >= 3) {
             let results = [];
             // on commence par sélectionner la zone où l'on affichera les résultats
@@ -201,12 +199,12 @@ const matchingDescription = (input, recipes) => {
         if (recipes[i].description.toLowerCase().includes(input)) {
             list.push(recipes[i]);
             // et comme il n'est pas nécessaire d'ajouter plusieurs fois la même recette, on peut sortir de la boucle
-            break;
         }
     }
     return list;
 };
 // Cette fonction va comparer deux listes et intégrer uniquement les items de la seconde liste absents de la première. Elle prend en entrée la liste à compléter, et la liste à y ajouter, et renvoie la liste complète.
+// attention, cette liste fonctionne uniquement pour des objets recettes, utilisant leur ID
 const alreadyIn = (fullList, addThisList) => {
     for (let item of addThisList) {
         let alreadyIn = 0;
@@ -221,6 +219,42 @@ const alreadyIn = (fullList, addThisList) => {
         }
     }
     return fullList;
+};
+// Cette fonction va prendre en entrée une liste de recettes et va renvoyer une liste débarrasée des ingrédients doublons
+const uniqueIngredients = (recipesList) => {
+    const uniqueIngredientsOnly = [];
+    for (let item of recipesList) {
+        for (let i = 0; i < item["ingredients"].length; i++) {
+            if (!uniqueIngredientsOnly.includes(item["ingredients"][i].ingredient.toLowerCase())) {
+                uniqueIngredientsOnly.push(item["ingredients"][i].ingredient.toLowerCase());
+            }
+        }
+    }
+    return uniqueIngredientsOnly;
+};
+// idem, avec la liste des appareils
+const uniqueAppliances = (recipesList) => {
+    const uniqueAppliancesOnly = [];
+    for (let item of recipesList) {
+        for (let i = 0; i < item["appliance"].length; i++) {
+            if (!uniqueAppliancesOnly.includes(item["appliance"].toLowerCase())) {
+                uniqueAppliancesOnly.push(item["appliance"].toLowerCase());
+            }
+        }
+    }
+    return uniqueAppliancesOnly;
+};
+// et encore idem, avec la liste des ustensiles
+const uniqueUstensils = (recipesList) => {
+    const uniqueUstensilsOnly = [];
+    for (let item of recipesList) {
+        for (let i = 0; i < item["ustensils"].length; i++) {
+            if (!uniqueUstensilsOnly.includes(item["ustensils"][i].toLowerCase())) {
+                uniqueUstensilsOnly.push(item["ustensils"][i].toLowerCase());
+            }
+        }
+    }
+    return uniqueUstensilsOnly;
 };
 // Cette fonction prend en entrée une liste de recettes (idéalement, liste déjà filtrée, mais fonctionne avec n'importe quelle liste de résultats) et renvoie l'ensemble des ingrédients utilisés
 const ingredientsOptions = (recipes) => {
