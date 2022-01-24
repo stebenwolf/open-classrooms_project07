@@ -7,6 +7,7 @@
     height: 2.375rem;
     line-height: 2.375rem; 
 */
+
 body {
     padding: 30px;
 }
@@ -71,14 +72,18 @@ body {
 .hashtag {
     margin: 10px 10px 10px 0;
     padding: 15px;
-    &::after {
-        content: "x";
-        border: 2px solid white;
-        border-radius: 100%;
-        padding: 0px 6px 3px 6px;
-        text-align: center;
-        margin-left: 15px;
-    }
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.close {
+    text-align: center;
+    margin-left: 10px;
+    opacity: 1;
+    color: white;
+    background-color: transparent;
+    border: none;
+    font-size: 1rem;
 }
 
 #search-stuff-ustensils:focus {

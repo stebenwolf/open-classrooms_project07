@@ -83,15 +83,18 @@ body {
 .hashtag {
   margin: 10px 10px 10px 0;
   padding: 15px;
+  font-size: 1rem;
+  font-weight: 400;
 }
 
-.hashtag::after {
-  content: "x";
-  border: 2px solid white;
-  border-radius: 100%;
-  padding: 0px 6px 3px 6px;
+.close {
   text-align: center;
-  margin-left: 15px;
+  margin-left: 10px;
+  opacity: 1;
+  color: white;
+  background-color: transparent;
+  border: none;
+  font-size: 1rem;
 }
 
 #search-stuff-ustensils:focus {
