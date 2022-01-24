@@ -345,6 +345,34 @@ fetchDataAsync().then(recipes => {
             }
         }
     });
+    // On veut également "écouter" les champs input des filtres avancés.
+    // On va commencer par les cibler
+    const dropInputIngredients = document.getElementById("dropInput-ingredients");
+    const dropInputAppliances = document.getElementById("dropInput-appliances");
+    const dropInputUstensils = document.getElementById("dropInput-ustensils");
+    // on va ensuite pour chacun d'eux récupérer ce qui est entré
+    dropInputIngredients.addEventListener("input", function (event) {
+        const input = event.target.value;
+        // avec cette valeur qui est entrée, on veut afficher UNIQUEMENT les ingrédients qui correspondent à cet input.
+        let finalResults = [];
+        let results = thisIngredientPlease(input, liste);
+        finalResults = itemAlreadyIn(finalResults, results);
+        dropDowns.updateDropdown("ingredients", finalResults);
+    });
+    dropInputAppliances.addEventListener("input", function (event) {
+        const input = event.target.value;
+        let finalResults = [];
+        let results = thisAppliancePlease(input, liste);
+        finalResults = itemAlreadyIn(finalResults, results);
+        dropDowns.updateDropdown("appliances", finalResults);
+    });
+    dropInputUstensils.addEventListener("input", function (event) {
+        const input = event.target.value;
+        let finalResults = [];
+        let results = thisUstensilPlease(input, liste);
+        finalResults = itemAlreadyIn(finalResults, results);
+        dropDowns.updateDropdown("ustensils", finalResults);
+    });
 });
 // Cette fonction prend en entrée une liste de résultats (recipes) et un input (le terme recherché), et renvoie la liste des recettes dont le titre contient l'input 
 const matchingRecipeTitle = (input, recipes) => {
@@ -400,6 +428,22 @@ const alreadyIn = (fullList, addThisList) => {
         let alreadyIn = 0;
         for (let i = 0; i < fullList.length; i++) {
             if (fullList[i].id == item.id) {
+                alreadyIn = 1;
+                break;
+            }
+        }
+        if (alreadyIn == 0) {
+            fullList.push(item);
+        }
+    }
+    return fullList;
+};
+// variante de already in
+const itemAlreadyIn = (fullList, addThisList) => {
+    for (let item of addThisList) {
+        let alreadyIn = 0;
+        for (let i = 0; i < fullList.length; i++) {
+            if (fullList[i] == item) {
                 alreadyIn = 1;
                 break;
             }
@@ -493,6 +537,47 @@ const catchSomeHashtags = (event, list) => {
     }
     console.log(list);
     return list;
+};
+// filtre avancé
+// cette fonction va renvoyer uniquement les ingrédients correspondant à l'input recherché
+const thisIngredientPlease = (input, list) => {
+    input = input.toLowerCase();
+    let resultats = [];
+    for (let i = 0; i < list.length; i++) {
+        for (let j = 0; j < list[i]["ingredients"].length; j++) {
+            const thisIngredient = list[i]["ingredients"][j]["ingredient"].toLowerCase();
+            if (thisIngredient.includes(input)) {
+                resultats.push(thisIngredient);
+            }
+        }
+    }
+    return resultats;
+};
+// idem avec les appareils
+const thisAppliancePlease = (input, list) => {
+    input = input.toLowerCase();
+    let resultats = [];
+    for (let i = 0; i < list.length; i++) {
+        const thisAppliance = list[i]["appliance"].toLowerCase();
+        if (thisAppliance.includes(input)) {
+            resultats.push(thisAppliance);
+        }
+    }
+    return resultats;
+};
+//idem avec les ustensiles
+const thisUstensilPlease = (input, list) => {
+    input = input.toLowerCase();
+    let resultats = [];
+    for (let i = 0; i < list.length; i++) {
+        for (let j = 0; j < list[i]["ustensils"].length; j++) {
+            const thisUstensil = list[i]["ustensils"][j].toLowerCase();
+            if (thisUstensil.includes(input)) {
+                resultats.push(thisUstensil);
+            }
+        }
+    }
+    return resultats;
 };
 // Cette fonction prend en entrée une liste de recettes (idéalement, liste déjà filtrée, mais fonctionne avec n'importe quelle liste de résultats) et renvoie l'ensemble des ingrédients utilisés
 const ingredientsOptions = (recipes) => {
