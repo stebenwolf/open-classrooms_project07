@@ -65,6 +65,7 @@ class Dropdown {
                 dropDownStuff.id = "ingredientsList";
                 dropBtnTitle.textContent = "Ingrédients";
                 dropInput.placeholder = "Rechercher un ingrédient";
+                dropInput.id = "dropInput-ingredients";
                 dropRow.id = "dropdown-ingredients";
                 dropColumn1.id = "column1_ingredients";
                 dropColumn2.id = "column2_ingredients";
@@ -75,6 +76,7 @@ class Dropdown {
                 dropDownStuff.id = "appliancesList";
                 dropBtnTitle.textContent = "Appareil";
                 dropInput.placeholder = "Rechercher un appareil";
+                dropInput.id = "dropInput-appliances";
                 dropRow.id = "dropdown-appliances";
                 dropColumn1.id = "column1_appliances";
                 dropColumn2.id = "column2_appliances";
@@ -85,6 +87,7 @@ class Dropdown {
                 dropDownStuff.id = "ustensilsList";
                 dropBtnTitle.textContent = "Ustensiles";
                 dropInput.placeholder = "Rechercher un ustensile";
+                dropInput.id = "dropInput-ustensils";
                 dropRow.id = "dropdown-ustensils";
                 dropColumn1.id = "column1_ustensils";
                 dropColumn2.id = "column2_ustensils";
