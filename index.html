@@ -12,6 +12,7 @@
     <title>Page d'accueil - Les Petits Plats</title>
     <!-- Custom JS -->
     <script src="./js/app.js" type="module"></script>
+
 </head>
 <body class="container-md">
 
@@ -28,7 +29,7 @@
     <main class="container">
         <section class ="search container row">
             <div class="row">
-                <div class="form-group has-search container-fluid">
+                <div class="col-xs-12 form-group has-search container-fluid">
                     <form id="mainSearch">
                         <input type="text" class="form-control form-control-lg bg-light" placeholder="Rechercher un ingrédient, appareil, ustensiles ou une recette" id="mainSearchInput">
                         <span class="fa fa-search form-control-feedback"></span>
@@ -38,17 +39,16 @@
 
             <div class="row">
                 <div id="hashtags" class="hashtags">
-
                 </div>
             </div>
 
-            <div class="row">
-                <div class="d-grip gap-2 col-10 d-md-flex justify-content-md-end">
+            <!-- <div class="row">
+                <div class="d-grip gap-2 col-xs-12 d-md-flex justify-content-md-end">
                     <select class="form-select btn-primary col-xs-4" id="selectIngredient">
                         <option value="" selected disabled hidden>
                             Ingrédients
                         </option>
-                    </select>        
+                    </select>     
                     <select class="form-select btn-success" id="selectAppliance">
                         <option value="" selected disabled hidden>
                             Appareil
@@ -59,33 +59,157 @@
                             Ustensiles
                         </option>
                     </select>
-
-                    <!-- <input type="text" class="form-control btn-primary datalists" list="datalistOptions" id="ingredientsDataList" placeholder="Ingrédients">
-                    <datalist id="datalistOptions">
-                        
-                    </datalist>
-
-                    <input class="form-control btn-success datalists" list="datalistApplianceOptions" id="appliancesDataList" placeholder="Appareil">
-                    <datalist id="datalistApplianceOptions">
-                        
-                    </datalist>
-
-                    <input class="form-control btn-danger datalists" list="datalistUstensilsOptions" id="ustensilsDataList" placeholder="Ustensiles">
-                    <datalist id="datalistUstensilsOptions">
-                        
-                    </datalist> -->
                 </div>
             </div>
-        </section>
-        <section id="results" class="results container row row-cols-1 row-cols-md-3 g-4">
+        </section> -->
 
+        <div class="dropDowns">
+        </div>
+
+        <section id="results" class="results container row row-cols-md-2 row-cols-lg-3 g-4">
         </section>
     </main>
 
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-
-    
+ 
 </body>
 </html>
+
+<!-- 
+
+    HTML :
+     <div class="navbar">
+  <a href="#home">Home</a>
+  <a href="#news">News</a>
+  <div class="dropdown">
+    <button class="dropbtn">Dropdown
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <div class="header">
+        <h2>Mega Menu</h2>
+      </div>
+      <div class="row">
+        <div class="column">
+          <h3>Category 1</h3>
+          <a href="#">Link 1</a>
+          <a href="#">Link 2</a>
+          <a href="#">Link 3</a>
+        </div>
+        <div class="column">
+          <h3>Category 2</h3>
+          <a href="#">Link 1</a>
+          <a href="#">Link 2</a>
+          <a href="#">Link 3</a>
+        </div>
+        <div class="column">
+          <h3>Category 3</h3>
+          <a href="#">Link 1</a>
+          <a href="#">Link 2</a>
+          <a href="#">Link 3</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
+
+    CSS : 
+
+     /* Navbar container */
+.navbar {
+  overflow: hidden;
+  background-color: #333;
+  font-family: Arial;
+}
+
+/* Links inside the navbar */
+.navbar a {
+  float: left;
+  font-size: 16px;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* The dropdown container */
+.dropdown {
+  float: left;
+  overflow: hidden;
+}
+
+/* Dropdown button */
+.dropdown .dropbtn {
+  font-size: 16px;
+  border: none;
+  outline: none;
+  color: white;
+  padding: 14px 16px;
+  background-color: inherit;
+  font: inherit; /* Important for vertical align on mobile phones */
+  margin: 0; /* Important for vertical align on mobile phones */
+}
+
+/* Add a red background color to navbar links on hover */
+.navbar a:hover, .dropdown:hover .dropbtn {
+  background-color: red;
+}
+
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  width: 100%;
+  left: 0;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Mega Menu header, if needed */
+.dropdown-content .header {
+  background: red;
+  padding: 16px;
+  color: white;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Create three equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 33.33%;
+  padding: 10px;
+  background-color: #ccc;
+  height: 250px;
+}
+
+/* Style links inside the columns */
+.column a {
+  float: none;
+  color: black;
+  padding: 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+/* Add a background color on hover */
+.column a:hover {
+  background-color: #ddd;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+} 
+}
+
+-->
