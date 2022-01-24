@@ -187,6 +187,13 @@ class Dropdown {
                 column3.remove();
             }
         }
+        if (length == 0) {
+            const div = document.createElement("div");
+            div.innerHTML = "<span style=\"width: 100%; color:white;\">Aucun résultat.</span>";
+            column1.append(div);
+            column2.remove();
+            column3.remove();
+        }
     }
 }
 export { Dropdown };
