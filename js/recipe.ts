@@ -71,11 +71,11 @@ class Recipe {
         const resultSection = document.getElementById("results");
 
         const divCol = document.createElement("div");
-        divCol.className = "col";
+        divCol.className = "col-md-6";
 
         const divCard = document.createElement("div");
         divCard.className = "card";
-        divCard.setAttribute("style","width: 18rem;");
+        divCard.setAttribute("style","");
 
         const divCardImg = document.createElement("img");
         divCardImg.src = "...";
