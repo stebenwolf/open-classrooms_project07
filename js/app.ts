@@ -1,6 +1,8 @@
-// Cette version du code s'intéresse au développement d'un algorithme "natif", c'est-à-dire qu'on utilisera uniquement des fonctions JS natives (<ES6?). Dans une seconde branche, on déploiera les mêmes fonctionnalités mais avec des fonctionnalités spécifiques aux listes (forEach, map, reduce, ...).
+// OC Projet 07 - Cette version du code s'intéresse au développement d'un algorithme "natif", c'est-à-dire qu'on utilisera uniquement des fonctions JS natives (<ES6?). Dans une seconde branche, on déploiera les mêmes fonctionnalités mais avec des propriétés spécifiques aux listes (forEach, map, reduce, ...).
 
+//import '../node_modules/bootstrap/dist/js/bootstrap.bundle.js';
 import { Recipe } from "./recipe.js";
+import { Dropdown } from "./dropdown.js";
 
 async function fetchDataAsync() {
     try {
@@ -23,15 +25,18 @@ fetchDataAsync().then(recipes => {
     
     // toutes les options d'ingrédients ici
     const uniqueIngredientsOnly = uniqueIngredients(liste);
-    const selectIngredient = document.getElementById("selectIngredient");
+    const uniqueAppliancesOnly = uniqueAppliances(liste);
+    const uniqueUstensilsOnly = uniqueUstensils(liste);
+
+    /* const selectIngredient = document.getElementById("selectIngredient");
     for (let i=0; i<uniqueIngredientsOnly.length; i++) {
         const option = document.createElement("option");
         option.value = uniqueIngredientsOnly[i][0].toUpperCase() + uniqueIngredientsOnly[i].substring(1);
         option.textContent = option.value;
         selectIngredient.append(option);
-    }
+    } */
     // et on ajoute un event listener : dès qu'on clique sur une option, on créé un hashtag avec l'option choisie
-    selectIngredient.addEventListener("change", (event) => {
+    /* selectIngredient.addEventListener("change", (event) => {
         const hashtags = document.getElementById("hashtags");
         const hashtag = document.createElement("span");
         hashtag.className = "hashtag badge bg-primary";
@@ -41,19 +46,64 @@ fetchDataAsync().then(recipes => {
             keywords.push(hashtag.textContent);
         }
         console.log(keywords);
-    });
+    }); */
+
+    const dropDowns = new Dropdown;
+    dropDowns.createDropdown("ingredients", uniqueIngredientsOnly);
+    dropDowns.createDropdown("appliances", uniqueAppliancesOnly);
+    dropDowns.createDropdown("ustensils", uniqueUstensilsOnly);
     
+    const myDropDowns = document.querySelector(".dropDowns");
+    myDropDowns.addEventListener("click", function(event) {
+        catchSomeHashtags(event, keywords);
+    }, false);
+
+    /* const dropDownIngredients = document.getElementById("dropdown-ingredients");
+    const onethird_ingredients = Math.ceil(uniqueIngredientsOnly.length/3);
+    const column1_ingredients = document.getElementById("column1_ingredients");
+    column1_ingredients.innerHTML = "";
+    const column2_ingredients = document.getElementById("column2_ingredients");
+    column2_ingredients.innerHTML = "";
+    const column3_ingredients = document.getElementById("column3_ingredients");
+    column3_ingredients.innerHTML = "";
+    for (let i=0; i<uniqueIngredientsOnly.length; i++) {
+        const span = document.createElement("span");
+        span.className = "ingredient";
+        span.textContent = uniqueIngredientsOnly[i][0].toUpperCase() + uniqueIngredientsOnly[i].substring(1);
+        if (i<onethird_ingredients) {
+            column1_ingredients.append(span);
+        }
+        else if (i>=onethird_ingredients && i<(2*onethird_ingredients)) {
+            column2_ingredients.append(span);
+        }
+        else { // (i>(2*onethird)) {
+            column3_ingredients.append(span);
+        }
+    }
+    dropDownIngredients.append(column1_ingredients, column2_ingredients, column3_ingredients);
+    dropDownIngredients.addEventListener("click", (event) => {
+        const hashtags = document.getElementById("hashtags");
+        const hashtag = document.createElement("span");
+        hashtag.className = "hashtag badge bg-primary";
+        hashtag.textContent = (<HTMLInputElement>event.target).innerText;
+        if (hashtag.textContent != "") {
+            hashtags.append(hashtag);
+            keywords.push(hashtag.textContent);
+        }
+        console.log(keywords);
+    });  */
+
     // toutes les options d'appareil ici
-    const uniqueAppliancesOnly = uniqueAppliances(liste);
-    const selectAppliance = document.getElementById("selectAppliance");
+    //const uniqueAppliancesOnly = uniqueAppliances(liste);
+    /* const selectAppliance = document.getElementById("selectAppliance");
     for (let i=0; i<uniqueAppliancesOnly.length; i++) {
         const option = document.createElement("option");
         option.value = uniqueAppliancesOnly[i][0].toUpperCase() + uniqueAppliancesOnly[i].substring(1);
         option.textContent = option.value;
         selectAppliance.append(option);
-    }
+    } */
     // et on ajoute un event listener : dès qu'on clique sur une option, on créé un hashtag avec l'option choisie
-    selectAppliance.addEventListener("change", (event) => {
+    /* selectAppliance.addEventListener("change", (event) => {
         const hashtags = document.getElementById("hashtags");
         const hashtag = document.createElement("span");
         hashtag.className = "hashtag badge bg-success";
@@ -63,19 +113,54 @@ fetchDataAsync().then(recipes => {
             keywords.push(hashtag.textContent);
         }
         console.log(keywords);
-    });
+    }); */
+
+    /* const dropDownAppliances= document.getElementById("dropdown-appliances");
+    const onethird_appliances = Math.ceil(uniqueAppliancesOnly.length/3);
+    const column1_appliances= document.getElementById("column1_appliances");
+    column1_appliances.innerHTML = "";
+    const column2_appliances = document.getElementById("column2_appliances");
+    column2_appliances.innerHTML = "";
+    const column3_appliances = document.getElementById("column3_appliances");
+    column3_appliances.innerHTML = "";
+    for (let i=0; i<uniqueAppliancesOnly.length; i++) {
+        const span = document.createElement("span");
+        span.className = "appliance";
+        span.textContent = span.textContent = uniqueAppliancesOnly[i][0].toUpperCase() + uniqueAppliancesOnly[i].substring(1);
+        if (i<onethird_appliances) {
+            column1_appliances.append(span);
+        }
+        else if (i>=onethird_appliances && i<(2*onethird_appliances)) {
+            column2_appliances.append(span);
+        }
+        else { // (i>(2*onethird)) {
+            column3_appliances.append(span);
+        }
+    }
+    dropDownAppliances.append(column1_appliances, column2_appliances, column3_appliances);
+    dropDownAppliances.addEventListener("click", (event) => {
+        const hashtags = document.getElementById("hashtags");
+        const hashtag = document.createElement("span");
+        hashtag.className = "hashtag badge bg-success";
+        hashtag.textContent = (<HTMLInputElement>event.target).innerText;
+        if (hashtag.textContent != "") {
+            hashtags.append(hashtag);
+            keywords.push(hashtag.textContent);
+        }
+        console.log(keywords);
+    });  */
         
     // toutes les options d'ustensiles enfin ici
-    const uniqueUstensilsOnly = uniqueUstensils(liste);
-    const selectUstensil = document.getElementById("selectUstensil");
+    //const uniqueUstensilsOnly = uniqueUstensils(liste);
+    /* const selectUstensil = document.getElementById("selectUstensil");
     for (let i=0; i<uniqueUstensilsOnly.length; i++) {
         const option = document.createElement("option");
         option.value = uniqueUstensilsOnly[i][0].toUpperCase() +uniqueUstensilsOnly[i].substring(1);
         option.textContent = option.value;
         selectUstensil.append(option);
-    }
+    } */
     // et on ajoute un event listener : dès qu'on clique sur une option, on créé un hashtag avec l'option choisie
-    selectUstensil.addEventListener("change", (event) => {
+    /* selectUstensil.addEventListener("change", (event) => {
         const hashtags = document.getElementById("hashtags");
         const hashtag = document.createElement("span");
         hashtag.className = "hashtag badge bg-danger";
@@ -85,7 +170,42 @@ fetchDataAsync().then(recipes => {
             keywords.push(hashtag.textContent);
         }
         console.log(keywords);
-    });
+    }); */
+
+    /* const dropDownUstensils= document.getElementById("dropdown-ustensils");
+    const onethird_ustensils = Math.ceil(uniqueUstensilsOnly.length/3);
+    const column1_ustensils= document.getElementById("column1_ustensils");
+    column1_ustensils.innerHTML = "";
+    const column2_ustensils = document.getElementById("column2_ustensils");
+    column2_ustensils.innerHTML = "";
+    const column3_ustensils = document.getElementById("column3_ustensils");
+    column3_ustensils.innerHTML = "";
+    for (let i=0; i<uniqueUstensilsOnly.length; i++) {
+        const span = document.createElement("span");
+        span.className = "ustensil";
+        span.textContent = span.textContent = uniqueUstensilsOnly[i][0].toUpperCase() + uniqueUstensilsOnly[i].substring(1);
+        if (i<onethird_ustensils) {
+            column1_ustensils.append(span);
+        }
+        else if (i>=onethird_ustensils && i<(2*onethird_ustensils)) {
+            column2_ustensils.append(span);
+        }
+        else { // (i>(2*onethird)) {
+            column3_ustensils.append(span);
+        }
+    }
+    dropDownUstensils.append(column1_ustensils, column2_ustensils, column3_ustensils);
+    dropDownUstensils.addEventListener("click", (event) => {
+        const hashtags = document.getElementById("hashtags");
+        const hashtag = document.createElement("span");
+        hashtag.className = "hashtag badge bg-danger";
+        hashtag.textContent = (<HTMLInputElement>event.target).innerText;
+        if (hashtag.textContent != "") {
+            hashtags.append(hashtag);
+            keywords.push(hashtag.textContent);
+        }
+        console.log(keywords);
+    });  */
     
     // on cible le champ de recherche principal
     const searchInput = document.forms["mainSearch"];
@@ -124,7 +244,7 @@ fetchDataAsync().then(recipes => {
         alreadyIn(filteredList, recipeTitleResults);
         alreadyIn(filteredList, descriptionResults);
         
-        const listOfUniqueIngredients = uniqueIngredients(filteredList);
+        /* const listOfUniqueIngredients = uniqueIngredients(filteredList);
         const selectIngredient = document.getElementById("selectIngredient");
         selectIngredient.innerHTML = "<option value=\"\" selected disabled hidden>Ingrédients</option>\"";
         for (let i=0; i<listOfUniqueIngredients.length; i++) {
@@ -132,9 +252,34 @@ fetchDataAsync().then(recipes => {
             option.value = listOfUniqueIngredients[i][0].toUpperCase() + listOfUniqueIngredients[i].substring(1);
             option.textContent = option.value;
             selectIngredient.append(option);
-        }
+        } */
 
-        const listOfUniqueAppliances = uniqueAppliances(filteredList);
+        const listOfUniqueIngredients = uniqueIngredients(filteredList);
+        /* const dropDownIngredients = document.getElementById("dropdown-ingredients");
+        const onethird_ingredients = Math.ceil(listOfUniqueIngredients.length/3);
+        const column1_ingredients = document.getElementById("column1_ingredients");
+        column1_ingredients.innerHTML = "";
+        const column2_ingredients = document.getElementById("column2_ingredients");
+        column2_ingredients.innerHTML = "";
+        const column3_ingredients = document.getElementById("column3_ingredients");
+        column3_ingredients.innerHTML = "";
+        for (let i=0; i<listOfUniqueIngredients.length; i++) {
+            const span = document.createElement("span");
+            span.className = "ingredient";
+            span.textContent = span.textContent = listOfUniqueIngredients[i][0].toUpperCase() + listOfUniqueIngredients[i].substring(1);
+            if (i<onethird_ingredients) {
+                column1_ingredients.append(span);
+            }
+            else if (i>=onethird_ingredients && i<(2*onethird_ingredients)) {
+                column2_ingredients.append(span);
+            }
+            else { // (i>(2*onethird)) {
+                column3_ingredients.append(span);
+            }
+        }
+        dropDownIngredients.append(column1_ingredients, column2_ingredients, column3_ingredients); */
+        
+        /* const listOfUniqueAppliances = uniqueAppliances(filteredList);
         const selectAppliance = document.getElementById("selectAppliance");
         selectAppliance.innerHTML = "<option value=\"\" selected disabled hidden>Appareil</option>\"";
         for (let i=0; i<listOfUniqueAppliances.length; i++) {
@@ -142,9 +287,34 @@ fetchDataAsync().then(recipes => {
             option.value = listOfUniqueAppliances[i][0].toUpperCase() + listOfUniqueAppliances[i].substring(1);
             option.textContent = option.value;
             selectAppliance.append(option);
-        }
+        } */
 
-        const listOfUniqueUstensils = uniqueUstensils(filteredList);
+        const listOfUniqueAppliances = uniqueAppliances(filteredList);
+        /* const dropDownAppliances= document.getElementById("dropdown-appliances");
+        const onethird_appliances = Math.ceil(listOfUniqueAppliances.length/3);
+        const column1_appliances= document.getElementById("column1_appliances");
+        column1_appliances.innerHTML = "";
+        const column2_appliances = document.getElementById("column2_appliances");
+        column2_appliances.innerHTML = "";
+        const column3_appliances = document.getElementById("column3_appliances");
+        column3_appliances.innerHTML = "";
+        for (let i=0; i<listOfUniqueAppliances.length; i++) {
+            const span = document.createElement("span");
+            span.className = "appliance";
+            span.textContent = span.textContent = listOfUniqueAppliances[i][0].toUpperCase() + listOfUniqueAppliances[i].substring(1);
+            if (i<onethird_appliances) {
+                column1_appliances.append(span);
+            }
+            else if (i>=onethird_appliances && i<(2*onethird_appliances)) {
+                column2_appliances.append(span);
+            }
+            else { // (i>(2*onethird)) {
+                column3_appliances.append(span);
+            }
+        }
+        dropDownAppliances.append(column1_appliances, column2_appliances, column3_appliances); */
+
+        /* const listOfUniqueUstensils = uniqueUstensils(filteredList);
         const selectUstensil = document.getElementById("selectUstensil");
         selectUstensil.innerHTML = "<option value=\"\" selected disabled hidden>Ustensiles</option>\"";
         for (let i=0; i<listOfUniqueUstensils.length; i++) {
@@ -152,8 +322,37 @@ fetchDataAsync().then(recipes => {
             option.value = listOfUniqueUstensils[i][0].toUpperCase() + listOfUniqueUstensils[i].substring(1);
             option.textContent = option.value;
             selectUstensil.append(option);
-        }
+        } */
 
+        const listOfUniqueUstensils = uniqueUstensils(filteredList);
+        /* const dropDownUstensils= document.getElementById("dropdown-ustensils");
+        const onethird_ustensils = Math.ceil(listOfUniqueUstensils.length/3);
+        const column1_ustensils= document.getElementById("column1_ustensils");
+        column1_ustensils.innerHTML = "";
+        const column2_ustensils = document.getElementById("column2_ustensils");
+        column2_ustensils.innerHTML = "";
+        const column3_ustensils = document.getElementById("column3_ustensils");
+        column3_ustensils.innerHTML = "";
+        for (let i=0; i<listOfUniqueUstensils.length; i++) {
+            const span = document.createElement("span");
+            span.className = "ustensil";
+            span.textContent = span.textContent = listOfUniqueUstensils[i][0].toUpperCase() + listOfUniqueUstensils[i].substring(1);
+            if (i<onethird_ustensils) {
+                column1_ustensils.append(span);
+            }
+            else if (i>=onethird_ustensils && i<(2*onethird_ustensils)) {
+                column2_ustensils.append(span);
+            }
+            else { // (i>(2*onethird)) {
+                column3_ustensils.append(span);
+            }
+        }
+        dropDownUstensils.append(column1_ustensils, column2_ustensils, column3_ustensils); */
+
+        dropDowns.updateDropdown("ingredients", listOfUniqueIngredients);
+        dropDowns.updateDropdown("appliances", listOfUniqueAppliances);
+        dropDowns.updateDropdown("ustensils", listOfUniqueUstensils);
+        
         // si la taille de l'input est >=3 caractères, on va lancer une recherche, sinon, on ne fait rien
         if (input.length >= 3) {
 
@@ -332,6 +531,36 @@ const sortByName = (list: Array<any>) => {
     return byName;
 }
 
+// cette fonction va récupérer les mots-clés sur lesquels on clique, et va d'une part les afficher sous forme de badge de couleur, et les stocker dans une liste
+const catchSomeHashtags = (event: any, list: Array<any>) => {
+    const hashtags = document.getElementById("hashtags");
+    const hashtag = document.createElement("span");
+    hashtag.className = "hashtag badge";
+    switch((<HTMLElement>event.target).className) {
+        case "ingredients":
+            hashtag.classList.add("bg-primary");
+            break;
+        case "appliances":
+            hashtag.classList.add("bg-success");
+            break;
+        case "ustensils":
+            hashtag.classList.add("bg-danger");
+            break;
+        default:
+            
+    }
+    hashtag.textContent = (<HTMLInputElement>event.target).innerText;
+    if (hashtag.textContent != "" && (<HTMLElement>event.target).parentElement.className == "column") {
+        hashtags.append(hashtag);
+        /* list.push(hashtag.textContent); */
+        list.push(hashtag.textContent);
+    }
+    console.log(list);
+    return list;
+}
+
+
+
 // Cette fonction prend en entrée une liste de recettes (idéalement, liste déjà filtrée, mais fonctionne avec n'importe quelle liste de résultats) et renvoie l'ensemble des ingrédients utilisés
 const ingredientsOptions = (recipes: Array<any>) => {
 
@@ -380,4 +609,3 @@ const ustensilsOptions = (recipes: Array<any>) => {
     console.log(list);
     return list;
 }
-
