@@ -515,25 +515,42 @@ const sortByName = (list) => {
 // cette fonction va récupérer les mots-clés sur lesquels on clique, et va d'une part les afficher sous forme de badge de couleur, et les stocker dans une liste
 const catchSomeHashtags = (event, list) => {
     const hashtags = document.getElementById("hashtags");
-    const hashtag = document.createElement("span");
-    hashtag.className = "hashtag badge";
-    switch (event.target.className) {
+    const hashtagDiv = document.createElement("div");
+    hashtagDiv.className = "hashtag badge";
+    const type = event.target.className;
+    switch (type) {
         case "ingredients":
-            hashtag.classList.add("bg-primary");
+            hashtagDiv.classList.add("bg-primary");
             break;
         case "appliances":
-            hashtag.classList.add("bg-success");
+            hashtagDiv.classList.add("bg-success");
             break;
         case "ustensils":
-            hashtag.classList.add("bg-danger");
+            hashtagDiv.classList.add("bg-danger");
             break;
         default:
     }
-    hashtag.textContent = event.target.innerText;
-    if (hashtag.textContent != "" && event.target.parentElement.className == "column") {
-        hashtags.append(hashtag);
-        /* list.push(hashtag.textContent); */
-        list.push(hashtag.textContent);
+    hashtagDiv.textContent = event.target.innerText;
+    if (hashtagDiv.textContent != "" && event.target.parentElement.className == "column") {
+        const closeButton = document.createElement("button");
+        closeButton.type = "button";
+        closeButton.className = "close";
+        closeButton.setAttribute("aria-label", "Close");
+        closeButton.innerHTML = "<i class=\"far fa-times-circle\"></i>";
+        hashtagDiv.append(closeButton);
+        hashtags.append(hashtagDiv);
+        list.push(hashtagDiv.textContent);
+        //list.push({"item": hashtagDiv.textContent, "type": type});
+        closeButton.addEventListener("click", function (event) {
+            const itemToRemove = event.target.parentElement.parentElement.innerText;
+            const index = list.indexOf(itemToRemove);
+            console.log(index);
+            if (index > -1) {
+                list.splice(index, 1);
+            }
+            console.log(list);
+            hashtagDiv.remove();
+        });
     }
     console.log(list);
     return list;
