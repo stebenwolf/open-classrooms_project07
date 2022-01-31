@@ -1,6 +1,6 @@
 class Init {
 
-    createBody() {
+    generateContent() {
         const body = document.querySelector("body");
         body.className = "container-md";
 

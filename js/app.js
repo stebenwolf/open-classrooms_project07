@@ -4,7 +4,7 @@ import { Init } from "./init.js";
 import { Recipe } from "./recipe.js";
 import { Dropdown } from "./dropdown.js";
 const doc = new Init;
-doc.createBody();
+doc.generateContent();
 async function fetchDataAsync() {
     try {
         const response = await fetch("./assets/recipes.json");
