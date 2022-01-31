@@ -1,8 +1,12 @@
 // OC Projet 07 - Cette version du code s'intéresse au développement d'un algorithme "natif", c'est-à-dire qu'on utilisera uniquement des fonctions JS natives (<ES6?). Dans une seconde branche, on déploiera les mêmes fonctionnalités mais avec des propriétés spécifiques aux listes (forEach, map, reduce, ...).
 
 //import '../node_modules/bootstrap/dist/js/bootstrap.bundle.js';
+import { Init } from "./init.js";
 import { Recipe } from "./recipe.js";
 import { Dropdown } from "./dropdown.js";
+
+const doc = new Init;
+doc.createBody();
 
 async function fetchDataAsync() {
     try {
