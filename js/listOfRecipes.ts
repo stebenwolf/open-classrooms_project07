@@ -81,31 +81,6 @@ class ListOfRecipes extends Array {
         }
         return results;
     }
-
-
-
-    /* integrateThisList(listToAdd: Array<Recipe>) {
-        let initialList = this;
-        console.log("initialList: ", initialList)
-        console.log("listToadd: ", listToAdd);
-        console.log(listToAdd);
-        for (let item of listToAdd) {
-            
-            console.log("tr.....");
-            let alreadyIn = 0;
-            for (let i=0; i<initialList.length; i++) {
-                if (initialList[i].id == item.id) {
-                    alreadyIn = 1;
-                    console.log("truc");
-                    break;
-                }
-            }
-            if (alreadyIn == 0) {
-                initialList.push(item);
-            }
-        }
-        return initialList;
-    } */
 }
 
 export { ListOfRecipes }

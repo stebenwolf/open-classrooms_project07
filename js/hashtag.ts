@@ -1,5 +1,3 @@
-import { ListOfHashtags } from "./listOfHashtags.js"
-
 interface Hashtag {
     name: string,
     type: string
@@ -47,12 +45,11 @@ class Hashtag {
         hashtags.append(hashtagDiv);
 
         closeButton.addEventListener("click",() => {
-            const hashtagToRemove = new Hashtag(currentItem["name"], currentItem["type"]);
             hashtagDiv.remove();
-            return hashtagToRemove;
+            /* const hashtagToRemove = new Hashtag(currentItem["name"], currentItem["type"]);
+            return hashtagToRemove; */
         })
 
-        hashtags.append(hashtagDiv);
         return hashtags;
     }
 }

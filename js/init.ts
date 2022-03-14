@@ -99,15 +99,10 @@ class Init {
         const div = document.createElement("div");
         div.className = "dropDowns";
 
-        
-
         section.append(div);
 
-        //const dropDownIngredients = 
         this.createDropdown("ingredients");
-        //const dropDownAppliances = 
         this.createDropdown("appliances");
-        //const dropDownUstensils = 
         this.createDropdown("ustensils");
 
         return section;

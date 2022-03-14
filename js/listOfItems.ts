@@ -47,11 +47,6 @@ class ListOfItems extends Array {
         });
         return byName;
     }
-
-    // cette méthode prend en paramètre un input utilisateur et renvoie la liste des termes contenant cet input
-    matchingItems(input: string) {
-        console.log("matchingItems in listOfItems: ",this);
-    }
 }
 
 export { ListOfItems }

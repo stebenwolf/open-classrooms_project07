@@ -39,89 +39,6 @@ class Dropdown {
         this.list = list;
     }
 
-    // Cette méthode va créer les éléments initiaux, à savoir des menus déroulants
-    // on l'appelle trois fois, une fois pour chaque type (ingrédients, appareils, ustensiles)
-    /* cccreateDropdown(type: string) {
-        const dropDownsDiv = document.querySelector(".dropDowns");
-        const dropDownStuff = document.createElement("div");
-        dropDownStuff.className = "dropdown-stuff";
-
-        const dropDownButton = document.createElement("button");
-        dropDownButton.className = "dropbtn-stuff";
-
-        const dropBtnTitle = document.createElement("span");
-        dropBtnTitle.className = "btn-title";
-        
-        const dropBtnArrow = document.createElement("span");
-        dropBtnArrow.className = "arrow";
-        dropBtnArrow.innerHTML = "<i class=\"fas fa-angle-down\"></i>";
-
-        const dropContent = document.createElement("div");
-        dropContent.className = "dropdown-content-stuff";
-        const dropHeader = document.createElement("div");
-        dropHeader.className = "header";
-        const dropInput = document.createElement("input");
-        dropInput.type = "text";
-        dropInput.className = "form-control search-stuff";
-    
-        const dropRow = document.createElement("div");
-        dropRow.className ="row";
-
-        const dropColumn1 = document.createElement("div");
-        dropColumn1.className = "column";
-        const dropColumn2 = document.createElement("div");
-        dropColumn2.className = "column";
-        const dropColumn3 = document.createElement("div");
-        dropColumn3.className = "column";
-
-        dropDownButton.append(dropBtnTitle, dropBtnArrow);
-        dropHeader.append(dropInput);
-        dropRow.append(dropColumn1, dropColumn2, dropColumn3);
-        dropContent.append(dropHeader, dropRow);
-        dropDownStuff.append(dropDownButton, dropContent)
-        dropDownsDiv.append(dropDownStuff);
-
-        switch(type) {
-            case "ingredients":
-                dropDownStuff.classList.add("bg-primary");
-                dropDownStuff.id = "ingredientsList";
-                dropBtnTitle.textContent = "Ingrédients";
-                dropInput.placeholder = "Rechercher un ingrédient";
-                dropInput.id = "dropInput-ingredients";
-                dropRow.id = "dropdown-ingredients";
-                dropColumn1.id = "column1_ingredients";
-                dropColumn2.id = "column2_ingredients";
-                dropColumn3.id = "column3_ingredients";
-                break;
-            case "appliances":
-                dropDownStuff.classList.add("bg-success");
-                dropDownStuff.id = "appliancesList";
-                dropBtnTitle.textContent = "Appareil";
-                dropInput.placeholder = "Rechercher un appareil";
-                dropInput.id = "dropInput-appliances";
-                dropRow.id = "dropdown-appliances";
-                dropColumn1.id = "column1_appliances";
-                dropColumn2.id = "column2_appliances";
-                dropColumn3.id = "column3_appliances";
-                break;
-            case "ustensils":
-                dropDownStuff.classList.add("bg-danger");
-                dropDownStuff.id = "ustensilsList";
-                dropBtnTitle.textContent = "Ustensiles";
-                dropInput.placeholder = "Rechercher un ustensile";
-                dropInput.id = "dropInput-ustensils";
-                dropRow.id = "dropdown-ustensils";
-                dropColumn1.id = "column1_ustensils";
-                dropColumn2.id = "column2_ustensils";
-                dropColumn3.id = "column3_ustensils";
-                break;
-            default:
-                console.error("Type inconnu");
-        }
-
-        return this;
-    } */
-
     // cette méthode va, à partir de dropdowns existants, effacer le contenu des colonnes avant de mettre à jour le contenu de la liste en fonction du type choisi
     // cette méthode est appelée à chaque nouveau caractère tapé dans la barre de recherche centrale pour l'instant, et sera ensuite appelée lorsqu'on filtre un type plus précis
     updateDropdown(type: string, list: Array<any>) {
@@ -206,16 +123,6 @@ class Dropdown {
                 }
             }
         }
-
-        document.querySelectorAll(".dropDown-item")
-        .forEach(element => {
-            element.addEventListener("click", function(clickedElement) {
-                //console.log("element: ", element);
-                //console.log("clickedelement: ",clickedElement);
-                //addHashtag(clickedElement, listOfKeywords)
-                //.displayAllHashtags();
-            })
-        });
     }
 
     // cette méthode s'applique au champ de recherche d'un dropdown. Elle prend en paramètre l'input utilisateur et renvoie la liste des items correspondants
