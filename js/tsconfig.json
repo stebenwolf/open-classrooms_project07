@@ -1,10 +1,15 @@
 {
     "compilerOptions": {
-        "target": "ESNext",
-        "module": "commonjs",
-        "sourceMap": true
+        "module": "esnext",
+        "target": "esnext",
+        "jsx": "preserve",
+        "checkJs": true,
+        "sourceMap": true,
+        "allowUnreachableCode": false,
+        "allowUnusedLabels": false
     },
     "exclude": [
-        "node_modules"
+        "node_modules",
+        "**/node_modules/*"
     ]
 }
