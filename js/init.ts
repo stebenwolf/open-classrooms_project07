@@ -99,8 +99,99 @@ class Init {
         const div = document.createElement("div");
         div.className = "dropDowns";
 
+        
+
         section.append(div);
+
+        //const dropDownIngredients = 
+        this.createDropdown("ingredients");
+        //const dropDownAppliances = 
+        this.createDropdown("appliances");
+        //const dropDownUstensils = 
+        this.createDropdown("ustensils");
+
         return section;
+    }
+
+    createDropdown(type: string) {
+        const dropDownsDiv = document.querySelector(".dropDowns");
+        const dropDownStuff = document.createElement("div");
+        dropDownStuff.className = "dropdown-stuff";
+
+        const dropDownButton = document.createElement("button");
+        dropDownButton.className = "dropbtn-stuff";
+
+        const dropBtnTitle = document.createElement("span");
+        dropBtnTitle.className = "btn-title";
+        
+        const dropBtnArrow = document.createElement("span");
+        dropBtnArrow.className = "arrow";
+        dropBtnArrow.innerHTML = "<i class=\"fas fa-angle-down\"></i>";
+
+        const dropContent = document.createElement("div");
+        dropContent.className = "dropdown-content-stuff";
+        const dropHeader = document.createElement("div");
+        dropHeader.className = "header";
+        const dropInput = document.createElement("input");
+        dropInput.type = "text";
+        dropInput.className = "form-control search-stuff";
+    
+        const dropRow = document.createElement("div");
+        dropRow.className ="row";
+
+        const dropColumn1 = document.createElement("div");
+        dropColumn1.className = "column";
+        const dropColumn2 = document.createElement("div");
+        dropColumn2.className = "column";
+        const dropColumn3 = document.createElement("div");
+        dropColumn3.className = "column";
+
+        dropDownButton.append(dropBtnTitle, dropBtnArrow);
+        dropHeader.append(dropInput);
+        dropRow.append(dropColumn1, dropColumn2, dropColumn3);
+        dropContent.append(dropHeader, dropRow);
+        dropDownStuff.append(dropDownButton, dropContent)
+        dropDownsDiv.append(dropDownStuff);
+
+        switch(type) {
+            case "ingredients":
+                dropDownStuff.classList.add("bg-primary");
+                dropDownStuff.id = "ingredientsList";
+                dropBtnTitle.textContent = "Ingrédients";
+                dropInput.placeholder = "Rechercher un ingrédient";
+                dropInput.id = "dropInput-ingredients";
+                dropRow.id = "dropdown-ingredients";
+                dropColumn1.id = "column1_ingredients";
+                dropColumn2.id = "column2_ingredients";
+                dropColumn3.id = "column3_ingredients";
+                break;
+            case "appliances":
+                dropDownStuff.classList.add("bg-success");
+                dropDownStuff.id = "appliancesList";
+                dropBtnTitle.textContent = "Appareil";
+                dropInput.placeholder = "Rechercher un appareil";
+                dropInput.id = "dropInput-appliances";
+                dropRow.id = "dropdown-appliances";
+                dropColumn1.id = "column1_appliances";
+                dropColumn2.id = "column2_appliances";
+                dropColumn3.id = "column3_appliances";
+                break;
+            case "ustensils":
+                dropDownStuff.classList.add("bg-danger");
+                dropDownStuff.id = "ustensilsList";
+                dropBtnTitle.textContent = "Ustensiles";
+                dropInput.placeholder = "Rechercher un ustensile";
+                dropInput.id = "dropInput-ustensils";
+                dropRow.id = "dropdown-ustensils";
+                dropColumn1.id = "column1_ustensils";
+                dropColumn2.id = "column2_ustensils";
+                dropColumn3.id = "column3_ustensils";
+                break;
+            default:
+                console.error("Type inconnu");
+        }
+
+        return this;
     }
 
     createResults() {
@@ -116,28 +207,3 @@ class Init {
 }
 
 export { Init }
-
-
-/* <body class="container-md">
-
-    <main class="container">
-        <section class ="search container row">
-            
-
-            <div class="row">
-                <div id="hashtags" class="hashtags">
-                </div>
-            </div>
-
-        <div class="dropDowns">
-        </div>
-
-        <section id="results" class="results container row row-cols-md-2 row-cols-lg-3 g-4">
-        </section>
-    </main>
-
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
- 
-</body> */

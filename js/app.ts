@@ -4,7 +4,11 @@
 import { Init } from "./init.js";
 import { Recipe } from "./recipe.js";
 import { Dropdown } from "./dropdown.js";
+import { ListOfRecipes } from "./listOfRecipes.js";
+import { Hashtag } from "./hashtag.js";
+import { ListOfHashtags } from "./listOfHashtags.js";
 
+// on génère le contenu de la page HTML
 const doc = new Init;
 doc.generateContent();
 
@@ -21,200 +25,181 @@ async function fetchDataAsync() {
 
 fetchDataAsync().then(recipes => {
 
-    // on commence par ajouter à chaque "input" la liste de toutes les options
-    const liste = matchingIngredients("",recipes);
+    // on créé une variable qui stocke tous les mots-clés/hashtags.
+    const keywords = new ListOfHashtags([]);
 
-    // on créé ensuite une variable qui va stocker les mots-clés retenus
-    const keywords = [];
-    
-    // toutes les options d'ingrédients ici
-    const uniqueIngredientsOnly = uniqueIngredients(liste);
-    const uniqueAppliancesOnly = uniqueAppliances(liste);
-    const uniqueUstensilsOnly = uniqueUstensils(liste);
+    let initialList = recipes;
+    let actualList = new ListOfRecipes([]);
 
-    /* const selectIngredient = document.getElementById("selectIngredient");
-    for (let i=0; i<uniqueIngredientsOnly.length; i++) {
-        const option = document.createElement("option");
-        option.value = uniqueIngredientsOnly[i][0].toUpperCase() + uniqueIngredientsOnly[i].substring(1);
-        option.textContent = option.value;
-        selectIngredient.append(option);
-    } */
-    // et on ajoute un event listener : dès qu'on clique sur une option, on créé un hashtag avec l'option choisie
-    /* selectIngredient.addEventListener("change", (event) => {
-        const hashtags = document.getElementById("hashtags");
-        const hashtag = document.createElement("span");
-        hashtag.className = "hashtag badge bg-primary";
-        hashtag.textContent = (<HTMLInputElement>event.target).value;
-        if (hashtag.textContent != "") {
-            hashtags.append(hashtag);
-            keywords.push(hashtag.textContent);
-        }
-        console.log(keywords);
-    }); */
-
-    const dropDowns = new Dropdown;
-    dropDowns.createDropdown("ingredients", uniqueIngredientsOnly);
-    dropDowns.createDropdown("appliances", uniqueAppliancesOnly);
-    dropDowns.createDropdown("ustensils", uniqueUstensilsOnly);
-    
-    const myDropDowns = document.querySelector(".dropDowns");
-    myDropDowns.addEventListener("click", function(event) {
-        catchSomeHashtags(event, keywords);
-    }, false);
-
-    /* const dropDownIngredients = document.getElementById("dropdown-ingredients");
-    const onethird_ingredients = Math.ceil(uniqueIngredientsOnly.length/3);
-    const column1_ingredients = document.getElementById("column1_ingredients");
-    column1_ingredients.innerHTML = "";
-    const column2_ingredients = document.getElementById("column2_ingredients");
-    column2_ingredients.innerHTML = "";
-    const column3_ingredients = document.getElementById("column3_ingredients");
-    column3_ingredients.innerHTML = "";
-    for (let i=0; i<uniqueIngredientsOnly.length; i++) {
-        const span = document.createElement("span");
-        span.className = "ingredient";
-        span.textContent = uniqueIngredientsOnly[i][0].toUpperCase() + uniqueIngredientsOnly[i].substring(1);
-        if (i<onethird_ingredients) {
-            column1_ingredients.append(span);
-        }
-        else if (i>=onethird_ingredients && i<(2*onethird_ingredients)) {
-            column2_ingredients.append(span);
-        }
-        else { // (i>(2*onethird)) {
-            column3_ingredients.append(span);
-        }
+    // on commence par créer, pour l'ensemble des recettes, un objet dédié
+    for (let i=0; i<initialList.length; i++) {
+        let recipe = new Recipe(
+            initialList[i].id,
+            initialList[i].name,
+            initialList[i].ingredients,
+            initialList[i].time,
+            initialList[i].description,
+            initialList[i].appliance,
+            initialList[i].ustensils
+        );
+        actualList.push(recipe);
     }
-    dropDownIngredients.append(column1_ingredients, column2_ingredients, column3_ingredients);
-    dropDownIngredients.addEventListener("click", (event) => {
-        const hashtags = document.getElementById("hashtags");
-        const hashtag = document.createElement("span");
-        hashtag.className = "hashtag badge bg-primary";
-        hashtag.textContent = (<HTMLInputElement>event.target).innerText;
-        if (hashtag.textContent != "") {
-            hashtags.append(hashtag);
-            keywords.push(hashtag.textContent);
-        }
-        console.log(keywords);
-    });  */
 
-    // toutes les options d'appareil ici
-    //const uniqueAppliancesOnly = uniqueAppliances(liste);
-    /* const selectAppliance = document.getElementById("selectAppliance");
-    for (let i=0; i<uniqueAppliancesOnly.length; i++) {
-        const option = document.createElement("option");
-        option.value = uniqueAppliancesOnly[i][0].toUpperCase() + uniqueAppliancesOnly[i].substring(1);
-        option.textContent = option.value;
-        selectAppliance.append(option);
-    } */
-    // et on ajoute un event listener : dès qu'on clique sur une option, on créé un hashtag avec l'option choisie
-    /* selectAppliance.addEventListener("change", (event) => {
-        const hashtags = document.getElementById("hashtags");
-        const hashtag = document.createElement("span");
-        hashtag.className = "hashtag badge bg-success";
-        hashtag.textContent = (<HTMLInputElement>event.target).value;
-        if (hashtag.textContent != "") {
-            hashtags.append(hashtag);
-            keywords.push(hashtag.textContent);
-        }
-        console.log(keywords);
-    }); */
+    // A chaque fois qu'on aura un changement soit au niveau de l'input principal, soit au niveau des hashtags (ajout ou suppression), on va avoir la même séquence : création d'une liste de recette, affichage des recettes, mise à jour des filtres avancés.
+    updateInterface(actualList, keywords);
+    /* listenToHashtags(keywords); */
 
-    /* const dropDownAppliances= document.getElementById("dropdown-appliances");
-    const onethird_appliances = Math.ceil(uniqueAppliancesOnly.length/3);
-    const column1_appliances= document.getElementById("column1_appliances");
-    column1_appliances.innerHTML = "";
-    const column2_appliances = document.getElementById("column2_appliances");
-    column2_appliances.innerHTML = "";
-    const column3_appliances = document.getElementById("column3_appliances");
-    column3_appliances.innerHTML = "";
-    for (let i=0; i<uniqueAppliancesOnly.length; i++) {
-        const span = document.createElement("span");
-        span.className = "appliance";
-        span.textContent = span.textContent = uniqueAppliancesOnly[i][0].toUpperCase() + uniqueAppliancesOnly[i].substring(1);
-        if (i<onethird_appliances) {
-            column1_appliances.append(span);
-        }
-        else if (i>=onethird_appliances && i<(2*onethird_appliances)) {
-            column2_appliances.append(span);
-        }
-        else { // (i>(2*onethird)) {
-            column3_appliances.append(span);
-        }
-    }
-    dropDownAppliances.append(column1_appliances, column2_appliances, column3_appliances);
-    dropDownAppliances.addEventListener("click", (event) => {
-        const hashtags = document.getElementById("hashtags");
-        const hashtag = document.createElement("span");
-        hashtag.className = "hashtag badge bg-success";
-        hashtag.textContent = (<HTMLInputElement>event.target).innerText;
-        if (hashtag.textContent != "") {
-            hashtags.append(hashtag);
-            keywords.push(hashtag.textContent);
-        }
-        console.log(keywords);
-    });  */
-        
-    // toutes les options d'ustensiles enfin ici
-    //const uniqueUstensilsOnly = uniqueUstensils(liste);
-    /* const selectUstensil = document.getElementById("selectUstensil");
-    for (let i=0; i<uniqueUstensilsOnly.length; i++) {
-        const option = document.createElement("option");
-        option.value = uniqueUstensilsOnly[i][0].toUpperCase() +uniqueUstensilsOnly[i].substring(1);
-        option.textContent = option.value;
-        selectUstensil.append(option);
-    } */
-    // et on ajoute un event listener : dès qu'on clique sur une option, on créé un hashtag avec l'option choisie
-    /* selectUstensil.addEventListener("change", (event) => {
-        const hashtags = document.getElementById("hashtags");
-        const hashtag = document.createElement("span");
-        hashtag.className = "hashtag badge bg-danger";
-        hashtag.textContent = (<HTMLInputElement>event.target).value;
-        if (hashtag.textContent != "") {
-            hashtags.append(hashtag);
-            keywords.push(hashtag.textContent);
-        }
-        console.log(keywords);
-    }); */
-
-    /* const dropDownUstensils= document.getElementById("dropdown-ustensils");
-    const onethird_ustensils = Math.ceil(uniqueUstensilsOnly.length/3);
-    const column1_ustensils= document.getElementById("column1_ustensils");
-    column1_ustensils.innerHTML = "";
-    const column2_ustensils = document.getElementById("column2_ustensils");
-    column2_ustensils.innerHTML = "";
-    const column3_ustensils = document.getElementById("column3_ustensils");
-    column3_ustensils.innerHTML = "";
-    for (let i=0; i<uniqueUstensilsOnly.length; i++) {
-        const span = document.createElement("span");
-        span.className = "ustensil";
-        span.textContent = span.textContent = uniqueUstensilsOnly[i][0].toUpperCase() + uniqueUstensilsOnly[i].substring(1);
-        if (i<onethird_ustensils) {
-            column1_ustensils.append(span);
-        }
-        else if (i>=onethird_ustensils && i<(2*onethird_ustensils)) {
-            column2_ustensils.append(span);
-        }
-        else { // (i>(2*onethird)) {
-            column3_ustensils.append(span);
-        }
-    }
-    dropDownUstensils.append(column1_ustensils, column2_ustensils, column3_ustensils);
-    dropDownUstensils.addEventListener("click", (event) => {
-        const hashtags = document.getElementById("hashtags");
-        const hashtag = document.createElement("span");
-        hashtag.className = "hashtag badge bg-danger";
-        hashtag.textContent = (<HTMLInputElement>event.target).innerText;
-        if (hashtag.textContent != "") {
-            hashtags.append(hashtag);
-            keywords.push(hashtag.textContent);
-        }
-        console.log(keywords);
-    });  */
-    
     // on cible le champ de recherche principal
     const searchInput = document.forms["mainSearch"];
 
-    // on affiche l'ensemble des recettes de la base de données
+    // à chaque modification de l'input, on actualise l'interface: liste des recettes affichées et contenu des dropdowns
+    searchInput.addEventListener("input", element => {
+        const input = element.target.value.toLowerCase();
+        const newList = actualList.matchingRecipes(input); 
+        updateResultsWithHashtags(newList);
+
+        // on va également "écouter" les items des dropdowns: à chaque clic, la liste des keywords est actualisée
+        /* listenToHashtags(keywords); */
+    });
+
+    const hashtagsZone = document.getElementById("hashtags");
+
+    hashtagsZone.addEventListener("click", () => {
+        const input = (<HTMLInputElement>document.getElementById("mainSearchInput")).value;
+        let newlist = actualList;
+        if (input.length > 0) {
+            newlist = actualList.matchingRecipes(input);
+        }
+        updateResultsWithHashtags(newlist);
+    });
+
+    const dropdowns = [];
+    dropdowns.push(document.getElementById("dropdown-ingredients"), document.getElementById("dropdown-appliances"), document.getElementById("dropdown-ustensils"));
+    for (let i=0; i<dropdowns.length; i++) {
+        dropdowns[i].addEventListener("click", () => {
+            const input = (<HTMLInputElement>document.getElementById("mainSearchInput")).value;
+            let newlist = actualList;
+            if (input.length > 0) {
+                newlist = actualList.matchingRecipes(input);
+            }
+            updateResultsWithHashtags(newlist);
+        })
+    }
+    
+
+    /* searchInput.addEventListener("awesomeTestEvent", (e) => console.log("aha!", e.detail.text));
+
+    const mainInput = document.getElementById("mainSearchInput");
+
+    mainInput.addEventListener("input", function() {
+        // create custom Event
+        const awesomeTest = new CustomEvent("awesomeTestEvent", { 
+            detail: {
+                text: (<HTMLInputElement>mainInput).value
+            }
+        });
+        dispatchEvent(awesomeTest);
+        console.log(awesomeTest.detail.text);
+    });
+    const myDropDowns = document.querySelector(".dropDowns");
+    //on ajoute un event listener sur la zone des filtres avancés. A chaque fois qu'on clique sur un des items de la liste, on créé un hashtag
+    // ce hashtag est lui-même écouté.
+    
+    myDropDowns.addEventListener("click", function(event) {
+        dealWithHashtags(event, recipes, keywords, types);
+    }, false);
+
+    const hashtags = document.getElementById("hashtags");
+    hashtags.addEventListener("click", function (event) {
+        //dealWithHashtags(event, recipes, keywords, type);
+        let type = (<HTMLElement>event.target).parentElement.className;
+        
+        if (type =="close") {
+            type = (<HTMLElement>event.target).parentElement.parentElement.className;
+        }
+        
+        switch (type){
+                case "hashtag badge bg-primary":
+                    console.log("bg-primary");
+                    break;
+                case "hashtag badge bg-success":
+                    console.log("bg-success");
+                    break;
+                case "hashtag badge bg-danger":
+                    console.log("bg-danger");
+                    break;
+                default:
+        };
+
+        console.log("keywords, quand je ferme: ", keywords);
+        // on cible la section des résultats
+        const resultSection = document.getElementById("results");
+        // on la vide, au cas où elle contiendrait déjà des informations
+        resultSection.innerHTML = "";
+        for (let i=0; i<recipes.length; i++) {
+            let recipe = new Recipe(
+                recipes[i].id,
+                recipes[i].name,
+                recipes[i].ingredients,
+                recipes[i].time,
+                recipes[i].description,
+                recipes[i].appliance,
+                recipes[i].ustensils
+            );
+            // on affiche chaque recette selon le format dédié
+            recipe.displayRecipe();
+        }
+        
+        let uniqueIngredientsOnly = uniqueIngredients(recipes);
+    let uniqueAppliancesOnly = uniqueAppliances(recipes); // idem pour les appareils
+    let uniqueUstensilsOnly = uniqueUstensils(recipes); // idem pour les ustensiles
+    dropDownIngredients.updateDropdown("ingredients", uniqueIngredientsOnly);
+    dropDownAppliances.updateDropdown("appliances", uniqueAppliancesOnly);
+    dropDownUstensils.updateDropdown("ustensils", uniqueUstensilsOnly);
+
+        dealWithHashtags(event, recipes, keywords, types); 
+    }); */
+
+    // on ajoute à présent un event listener de type "input" au champ de recherche principal
+    /* searchInput.addEventListener("input", element => {
+
+        console.clear();
+        console.log();
+
+        // on cible la section des résultats
+        const resultSection = document.getElementById("results");
+        // on la vide, au cas où elle contiendrait déjà des informations
+        resultSection.innerHTML = "";
+        
+        
+        // on stocke la valeur recherchée par l'utilisateur dans une variable
+        const input = element.target.value.toLowerCase();
+
+        // on créé la liste des (futurs) résultats
+        let filteredList = [];
+
+        // on souhaite s'assurer qu'une même recette n'est pas ajoutée deux fois...
+        // on commence par créer les différentes listes à afficher. Chacune de ces listes correspond à la recherche de l'input utilisateur parmi les ingrédients, puis les titres de recettes, puis les descriptions.
+        const ingredientsResults = matchingIngredients(input, recipes);
+        const recipeTitleResults = matchingRecipeTitle(input, recipes);
+        const descriptionResults = matchingDescription(input, recipes);
+
+        // on va ensuite ajouter l'une après l'autre les résultats des différents filtres à la liste principale
+        alreadyIn(filteredList, ingredientsResults);
+        alreadyIn(filteredList, recipeTitleResults);
+        alreadyIn(filteredList, descriptionResults);
+
+        // on va maintenant supprimer les items doublons de chacune des catégories (ingrédients, appareils, ustensiles)
+        let uniqueIngredientsOnly = uniqueIngredients(filteredList);
+        let uniqueAppliancesOnly = uniqueAppliances(filteredList);
+        let uniqueUstensilsOnly = uniqueUstensils(filteredList);
+
+        // enfin, on créé les filtres avancés, qui contiennent un menu déroulant affichant pour chaque catégorie les éléments des recettes correspondantes.
+        dropDownIngredients.updateDropdown("ingredients", uniqueIngredientsOnly);
+        dropDownAppliances.updateDropdown("appliances", uniqueAppliancesOnly);
+        dropDownUstensils.updateDropdown("ustensils", uniqueUstensilsOnly);
+
+        // on commence par créer, pour l'ensemble des recettes de la base de données, un objet dédié
     for (let i=0; i<recipes.length; i++) {
         let recipe = new Recipe(
             recipes[i].id,
@@ -225,142 +210,15 @@ fetchDataAsync().then(recipes => {
             recipes[i].appliance,
             recipes[i].ustensils
         );
+        // on affiche chaque recette selon le format dédié
         recipe.displayRecipe();
     }
-
-    // on ajoute à présent un event listener de type "input" au champ de recherche principal
-    searchInput.addEventListener("input", element => {
-        console.clear();
-        console.log();
-
-        // on stocke la valeur recherchée par l'utilisateur dans une variable
-        const input = element.target.value.toLowerCase();
-
-        let filteredList = [];
-        // on souhaite s'assurer qu'une même recette n'est pas ajoutée deux fois...
-        // on commence par créer les différentes listes à afficher
-        const ingredientsResults = matchingIngredients(input, recipes);
-        const recipeTitleResults = matchingRecipeTitle(input, recipes);
-        const descriptionResults = matchingDescription(input, recipes);
-
-        // on va ensuite ajouter l'une après l'autre les résultats des différents filtres à la liste principale
-        alreadyIn(filteredList, ingredientsResults);
-        alreadyIn(filteredList, recipeTitleResults);
-        alreadyIn(filteredList, descriptionResults);
-        
-        /* const listOfUniqueIngredients = uniqueIngredients(filteredList);
-        const selectIngredient = document.getElementById("selectIngredient");
-        selectIngredient.innerHTML = "<option value=\"\" selected disabled hidden>Ingrédients</option>\"";
-        for (let i=0; i<listOfUniqueIngredients.length; i++) {
-            const option = document.createElement("option");
-            option.value = listOfUniqueIngredients[i][0].toUpperCase() + listOfUniqueIngredients[i].substring(1);
-            option.textContent = option.value;
-            selectIngredient.append(option);
-        } */
-
-        const listOfUniqueIngredients = uniqueIngredients(filteredList);
-        /* const dropDownIngredients = document.getElementById("dropdown-ingredients");
-        const onethird_ingredients = Math.ceil(listOfUniqueIngredients.length/3);
-        const column1_ingredients = document.getElementById("column1_ingredients");
-        column1_ingredients.innerHTML = "";
-        const column2_ingredients = document.getElementById("column2_ingredients");
-        column2_ingredients.innerHTML = "";
-        const column3_ingredients = document.getElementById("column3_ingredients");
-        column3_ingredients.innerHTML = "";
-        for (let i=0; i<listOfUniqueIngredients.length; i++) {
-            const span = document.createElement("span");
-            span.className = "ingredient";
-            span.textContent = span.textContent = listOfUniqueIngredients[i][0].toUpperCase() + listOfUniqueIngredients[i].substring(1);
-            if (i<onethird_ingredients) {
-                column1_ingredients.append(span);
-            }
-            else if (i>=onethird_ingredients && i<(2*onethird_ingredients)) {
-                column2_ingredients.append(span);
-            }
-            else { // (i>(2*onethird)) {
-                column3_ingredients.append(span);
-            }
-        }
-        dropDownIngredients.append(column1_ingredients, column2_ingredients, column3_ingredients); */
-        
-        /* const listOfUniqueAppliances = uniqueAppliances(filteredList);
-        const selectAppliance = document.getElementById("selectAppliance");
-        selectAppliance.innerHTML = "<option value=\"\" selected disabled hidden>Appareil</option>\"";
-        for (let i=0; i<listOfUniqueAppliances.length; i++) {
-            const option = document.createElement("option");
-            option.value = listOfUniqueAppliances[i][0].toUpperCase() + listOfUniqueAppliances[i].substring(1);
-            option.textContent = option.value;
-            selectAppliance.append(option);
-        } */
-
-        const listOfUniqueAppliances = uniqueAppliances(filteredList);
-        /* const dropDownAppliances= document.getElementById("dropdown-appliances");
-        const onethird_appliances = Math.ceil(listOfUniqueAppliances.length/3);
-        const column1_appliances= document.getElementById("column1_appliances");
-        column1_appliances.innerHTML = "";
-        const column2_appliances = document.getElementById("column2_appliances");
-        column2_appliances.innerHTML = "";
-        const column3_appliances = document.getElementById("column3_appliances");
-        column3_appliances.innerHTML = "";
-        for (let i=0; i<listOfUniqueAppliances.length; i++) {
-            const span = document.createElement("span");
-            span.className = "appliance";
-            span.textContent = span.textContent = listOfUniqueAppliances[i][0].toUpperCase() + listOfUniqueAppliances[i].substring(1);
-            if (i<onethird_appliances) {
-                column1_appliances.append(span);
-            }
-            else if (i>=onethird_appliances && i<(2*onethird_appliances)) {
-                column2_appliances.append(span);
-            }
-            else { // (i>(2*onethird)) {
-                column3_appliances.append(span);
-            }
-        }
-        dropDownAppliances.append(column1_appliances, column2_appliances, column3_appliances); */
-
-        /* const listOfUniqueUstensils = uniqueUstensils(filteredList);
-        const selectUstensil = document.getElementById("selectUstensil");
-        selectUstensil.innerHTML = "<option value=\"\" selected disabled hidden>Ustensiles</option>\"";
-        for (let i=0; i<listOfUniqueUstensils.length; i++) {
-            const option = document.createElement("option");
-            option.value = listOfUniqueUstensils[i][0].toUpperCase() + listOfUniqueUstensils[i].substring(1);
-            option.textContent = option.value;
-            selectUstensil.append(option);
-        } */
-
-        const listOfUniqueUstensils = uniqueUstensils(filteredList);
-        /* const dropDownUstensils= document.getElementById("dropdown-ustensils");
-        const onethird_ustensils = Math.ceil(listOfUniqueUstensils.length/3);
-        const column1_ustensils= document.getElementById("column1_ustensils");
-        column1_ustensils.innerHTML = "";
-        const column2_ustensils = document.getElementById("column2_ustensils");
-        column2_ustensils.innerHTML = "";
-        const column3_ustensils = document.getElementById("column3_ustensils");
-        column3_ustensils.innerHTML = "";
-        for (let i=0; i<listOfUniqueUstensils.length; i++) {
-            const span = document.createElement("span");
-            span.className = "ustensil";
-            span.textContent = span.textContent = listOfUniqueUstensils[i][0].toUpperCase() + listOfUniqueUstensils[i].substring(1);
-            if (i<onethird_ustensils) {
-                column1_ustensils.append(span);
-            }
-            else if (i>=onethird_ustensils && i<(2*onethird_ustensils)) {
-                column2_ustensils.append(span);
-            }
-            else { // (i>(2*onethird)) {
-                column3_ustensils.append(span);
-            }
-        }
-        dropDownUstensils.append(column1_ustensils, column2_ustensils, column3_ustensils); */
-
-        dropDowns.updateDropdown("ingredients", listOfUniqueIngredients);
-        dropDowns.updateDropdown("appliances", listOfUniqueAppliances);
-        dropDowns.updateDropdown("ustensils", listOfUniqueUstensils);
         
         // si la taille de l'input est >=3 caractères, on va lancer une recherche, sinon, on ne fait rien
         if (input.length >= 3) {
 
             let results = [];
+            let firstList = new ListOfRecipes([]);
 
             // on commence par sélectionner la zone où l'on affichera les résultats
             const resultSection = document.getElementById("results");
@@ -378,6 +236,15 @@ fetchDataAsync().then(recipes => {
             alreadyIn(results, recipeTitleResults);
             alreadyIn(results, descriptionResults);
             results = sortById(results);
+            
+            
+            const secondList_ing = new ListOfRecipes(ingredientsResults);
+            const secondList_rec = new ListOfRecipes([]);
+            const secondList_des = new ListOfRecipes([]);
+
+            firstList.integrateThisList(secondList_ing);
+            firstList.integrateThisList(secondList_rec);
+            firstList.integrateThisList(secondList_des);
 
             // à présent qu'on a une liste "épurée", on va créer les objets associés
             for (let i=0; i<results.length; i++) {
@@ -399,11 +266,11 @@ fetchDataAsync().then(recipes => {
             }
 
         }
-    });
+    }); */
 
     // On veut également "écouter" les champs input des filtres avancés.
     // On va commencer par les cibler
-    const dropInputIngredients = document.getElementById("dropInput-ingredients");
+    /* const dropInputIngredients = document.getElementById("dropInput-ingredients");
     const dropInputAppliances = document.getElementById("dropInput-appliances");
     const dropInputUstensils = document.getElementById("dropInput-ustensils");
 
@@ -413,36 +280,169 @@ fetchDataAsync().then(recipes => {
         
         // avec cette valeur qui est entrée, on veut afficher UNIQUEMENT les ingrédients qui correspondent à cet input.
         let finalResults = [];
-        let results = thisIngredientPlease(input, liste);
+        let results = thisIngredientPlease(input, recipes);
         finalResults = itemAlreadyIn(finalResults, results);
         
-        dropDowns.updateDropdown("ingredients",finalResults);
+        dropDownIngredients.updateDropdown("ingredients",finalResults);
     });
 
     dropInputAppliances.addEventListener("input",function(event) {
         const input = (<HTMLInputElement>event.target).value;
     
         let finalResults = [];
-        let results = thisAppliancePlease(input, liste);
+        let results = thisAppliancePlease(input, recipes);
         finalResults = itemAlreadyIn(finalResults, results);
 
-        dropDowns.updateDropdown("appliances",finalResults);
+        dropDownAppliances.updateDropdown("appliances",finalResults);
+        
     });
 
     dropInputUstensils.addEventListener("input",function(event) {
         const input = (<HTMLInputElement>event.target).value;
     
         let finalResults = [];
-        let results = thisUstensilPlease(input, liste);
+        let results = thisUstensilPlease(input, recipes);
         finalResults = itemAlreadyIn(finalResults, results);
 
-        dropDowns.updateDropdown("ustensils",finalResults);
-    });
+        dropDownUstensils.updateDropdown("ustensils",finalResults);
+    }); */
 
 });
+/* ----------- FIN DE LA FONCTION PRINCIPALE ----------------- */
+
+// Fonction updateInterface() : gère la mise à jour de l'interface principale (liste des recettes, contenu des filtres) à chaque changement au niveau de l'input principal ou des hashtags (ajout/suppression)
+const updateInterface = (inputList: ListOfRecipes, keywords: ListOfHashtags) => {
+
+    // on cible la section des résultats
+    const resultSection = document.getElementById("results");
+    // on la vide, au cas où elle contiendrait déjà des informations
+    resultSection.innerHTML = "";
+
+    if (inputList.length == 0) {
+        resultSection.innerHTML = "Aucune recette ne correspond à votre recherche... vous pouvez essayer avec \" tarte aux pommes \", \"poisson\", etc. !";
+    } else {
+        // on affiche la liste des recettes
+        inputList.displayRecipes();
+    }
+    
+    // on a besoin pour chaque type de filtre :
+    // - de la liste des termes correspondants,
+    // - sans doublons,
+    // - triés par ordre alphabétique,
+    // - sans oublier de supprimer les hashtags
+    const listOfIngredients = inputList
+        .extractIngredients()
+        .deleteDuplicates()
+        .deleteHashtags(keywords)
+        .sortByName();
+    
+    const listOfAppliances = inputList
+        .extractAppliances()
+        .deleteDuplicates()
+        .deleteHashtags(keywords)
+        .sortByName();
+    
+    const listOfUstensils = inputList
+        .extractUstensils()
+        .deleteDuplicates()
+        .deleteHashtags(keywords)
+        .sortByName();
+    
+    // passons maintenant aux filtres avancés. On commence par créer pour chaque filtre l'objet associé
+    const dropDownIngredients = new Dropdown("ingredients",listOfIngredients);
+    const dropDownAppliances = new Dropdown("appliances",listOfAppliances);
+    const dropDownUstensils = new Dropdown("ustensils",listOfUstensils);
+    
+    // et on remplit chaque filtre avec les options souhaitées
+    dropDownIngredients.updateDropdown("ingredients", listOfIngredients);
+    dropDownAppliances.updateDropdown("appliances", listOfAppliances);
+    dropDownUstensils.updateDropdown("ustensils", listOfUstensils);
+
+    // on cible ensuite chaque champ recherche des menus dropDown
+    const inputIngredients = document.getElementById("dropInput-ingredients");
+    inputIngredients.addEventListener("input", element => {
+        const input = (<HTMLInputElement>element.target).value.toLowerCase();
+        const newList = dropDownIngredients.search(input); 
+        dropDownIngredients.updateDropdown("ingredients",newList);
+        //emptySearch("dropInput-ingredients");
+    });
+    const inputAppliances = document.getElementById("dropInput-appliances");
+    inputAppliances.addEventListener("input", element => {
+        const input = (<HTMLInputElement>element.target).value.toLowerCase();
+        const newList = dropDownAppliances.search(input); 
+        dropDownAppliances.updateDropdown("appliances",newList);
+        //emptySearch("dropInput-appliances");
+    });
+    const inputUstensils = document.getElementById("dropInput-ustensils");
+    inputUstensils.addEventListener("input", element => {
+        const input = (<HTMLInputElement>element.target).value.toLowerCase();
+        const newList = dropDownUstensils.search(input); 
+        dropDownUstensils.updateDropdown("ustensils",newList);
+    });    
+        
+    return {inputList, listOfIngredients, listOfAppliances, listOfUstensils};
+}
+
+// cette fonction est utilisée par les event listeners des hashtags. Lorsqu'on ajoute, supprime ou clique dans la zone des hashtags, cette fonction va faire la liste des hashtags existants et met à jour l'interface en fonction.
+const updateResultsWithHashtags = (initialList: ListOfRecipes) => {
+    const allHashtags = document.querySelectorAll(".hashtag");
+    const newKeywords = new ListOfHashtags([]);
+
+    allHashtags.forEach(element => {
+        const newHashtag = new Hashtag(element.textContent, element["dataset"]["hashtagtype"]);
+        newKeywords.push(newHashtag);
+    });
+        
+    let i = 0;
+    let newList = initialList;
+    if (newKeywords.length>0) {
+        newList = initialList.matchingRecipes(newKeywords[0]["name"]);
+        while (i<newKeywords.length) {
+            newList = newList.matchingRecipes(newKeywords[i]["name"]);
+            i++;
+        };
+    }
+
+    updateInterface(newList, newKeywords);
+}
+
+// cette fonction va écouter les items des dropdowns : au click sur un mot-clé, on vide le champ de recherche
+const emptySearch = (inputField: string) => {    
+    const input = document.getElementById(inputField);
+    const dropdownItems = document.querySelectorAll(".dropDown-item");
+    dropdownItems.forEach(element => element.addEventListener("click", () => (<HTMLInputElement>input).value = ""))
+    
+    // fonction en standby car le dropdown ne se met pas à jour quand il est vidé...
+}
+
+// cette fonction va ajouter un hashtag à la liste keywords
+const addHashtag = (input: Event, listOfKeywords: ListOfHashtags) => {
+    const hashtags = document.getElementById("hashtags");
+    hashtags.innerHTML = "";
+    
+    const itemClicked = (<HTMLElement>input.target).innerText;
+    const itemType = (<HTMLElement>input.target).classList[1];
+
+    const newHashtag = new Hashtag(itemClicked, itemType);
+    
+    console.log("fonction addHashtag, list of keywords : ",listOfKeywords);
+    listOfKeywords.push(newHashtag);
+
+    document.querySelectorAll(".close").forEach(element => {
+        console.log("ploup");
+        console.log("écoute les boutons close: ",element);
+    })
+    
+    return listOfKeywords;
+}
+
+
 
 // Cette fonction prend en entrée une liste de résultats (recipes) et un input (le terme recherché), et renvoie la liste des recettes dont le titre contient l'input 
 const matchingRecipeTitle = (input: string, recipes: Array<any>) => {
+
+    input = input.toLowerCase();
+
     // on créé une variable qui va stocker toutes les recettes correspondantes
     let list = [];
 
@@ -459,6 +459,8 @@ const matchingRecipeTitle = (input: string, recipes: Array<any>) => {
 
 // Cette fonction prend en entrée une liste de resultats (recipes) et un input (le terme recherché), et renvoit la liste des recettes contenant un ingrédient correspondant
 const matchingIngredients = (input: string, recipes: Array<any>) => {
+
+    input = input.toLowerCase();
     
     // on créé une variable qui va stocker toutes les recettes correspondantes
     let list = [];
@@ -475,12 +477,14 @@ const matchingIngredients = (input: string, recipes: Array<any>) => {
             }
         }
     }
-    //console.log("ingrédients de recettes ",list);
     return list;
 }
 
 // Cette fonction prend en entrée une liste de recettes (recipes) et un input (le terme recherché), et renvoit la liste des recettes dont la description contient le terme recherché
 const matchingDescription = (input: string, recipes: Array<any>) => {
+
+    input = input.toLowerCase();
+
     // on créé une variable qui va stocker toutes les recettes correspondantes
     let list = [];
     // on parcourt toute la liste des recettes
@@ -488,7 +492,48 @@ const matchingDescription = (input: string, recipes: Array<any>) => {
         // au sein de chaque recette, on va chercher dans chaque description si celle-ci contient le terme recherché
         if (recipes[i].description.toLowerCase().includes(input)) {
             list.push(recipes[i]);
-            // et comme il n'est pas nécessaire d'ajouter plusieurs fois la même recette, on peut sortir de la boucle
+        }
+    }
+    return list;
+}
+
+// Cette fonction prend en entrée une liste de resultats (recipes) et un input (le terme recherché), et renvoit la liste des recettes contenant l'appareil correspondant
+const matchingAppliances = (input: string, recipes: Array<any>) => {
+
+    input = input.toLowerCase();
+    
+    // on créé une variable qui va stocker toutes les recettes correspondantes
+    let list = [];
+
+    // on parcourt toute la liste des recettes
+    for (let i=0; i<recipes.length; i++) {
+        // au sein de chaque recette, on regarde si la clé "appliance" contient le terme recherché
+        // si un des appareils correspond au terme recherché, on ajoute le nom de la recette à la liste. Sinon, on ne fait rien.
+        if (recipes[i].appliance.toLowerCase() == input.toLowerCase()) {
+            list.push(recipes[i]);
+        }
+    }
+    return list;
+}
+
+// Cette fonction prend en entrée une liste de resultats (recipes) et un input (le terme recherché), et renvoit la liste des recettes contenant l'ustensile correspondant
+const matchingUstensils = (input: string, recipes: Array<any>) => {
+
+    input = input.toLowerCase();
+    
+    // on créé une variable qui va stocker toutes les recettes correspondantes
+    let list = [];
+
+    // on parcourt toute la liste des recettes
+    for (let i=0; i<recipes.length; i++) {
+        // au sein de chaque recette, on parcourt chaque liste d'ingrédients
+        for (let j=0; j<recipes[i].ustensils.length; j++) {
+            // si un des ingrédients contient le terme recherché, on ajoute le nom de la recette à la liste. Sinon, on ne fait rien.
+            if (recipes[i].ustensils[j].toLowerCase().includes(input)) {
+                list.push(recipes[i]);
+                // comme on n'a pas besoin d'ajouter x fois la même recette même si plusieurs ingrédients correspondent, on peut sortir de la boucle
+                break;
+            }
         }
     }
     return list;
@@ -529,7 +574,7 @@ const itemAlreadyIn = (fullList: Array<any>, addThisList: Array<string>) => {
     return fullList;
 }
 
-// Cette fonction va prendre en entrée une liste de recettes et va renvoyer une liste débarrasée des ingrédients doublons
+// Cette fonction va prendre en entrée une liste de recettes et va renvoyer une liste débarrassée des ingrédients doublons
 const uniqueIngredients = (recipesList: Array<any>) => {
     let uniqueIngredientsOnly = [];
     for (let item of recipesList) {
@@ -596,6 +641,7 @@ const catchSomeHashtags = (event: any, list: Array<any>) => {
     const hashtags = document.getElementById("hashtags");
     const hashtagDiv = document.createElement("div");
     hashtagDiv.className = "hashtag badge";
+    hashtagDiv.textContent = (<HTMLInputElement>event.target).innerText;
     const type = (<HTMLElement>event.target).className;
     switch(type) {
         case "ingredients":
@@ -603,13 +649,14 @@ const catchSomeHashtags = (event: any, list: Array<any>) => {
             break;
         case "appliances":
             hashtagDiv.classList.add("bg-success");
+            
             break;
         case "ustensils":
             hashtagDiv.classList.add("bg-danger");
             break;
         default:    
     }
-    hashtagDiv.textContent = (<HTMLInputElement>event.target).innerText;
+    
     if (hashtagDiv.textContent != "" && (<HTMLElement>event.target).parentElement.className == "column") {
         const closeButton = document.createElement("button");
         closeButton.type = "button";
@@ -619,20 +666,15 @@ const catchSomeHashtags = (event: any, list: Array<any>) => {
         hashtagDiv.append(closeButton);
         hashtags.append(hashtagDiv);
         list.push(hashtagDiv.textContent);
-        //list.push({"item": hashtagDiv.textContent, "type": type});
+        
         closeButton.addEventListener("click",function(event) {
             const itemToRemove = (<HTMLElement>event.target).parentElement.parentElement.innerText;
             const index = list.indexOf(itemToRemove);
-            console.log(index);
-            if (index > -1 ) {
-                list.splice(index, 1);
-            }
-            console.log(list);
-            hashtagDiv.remove()
+            list.splice(index, 1);
+                        
+            hashtagDiv.remove();
         });
     }
-
-    console.log(list);
     return list;
 }
 
@@ -679,6 +721,35 @@ const thisUstensilPlease = (input: string, list: Array<any>) => {
 }
 
 
+// on veut à présent une fonction qui prend en entrée une liste de mots-clés, et ne renvoie que les recettes qui contiennent l'ensemble des mots-clés présents.
+// si on a le mot-clé "coco" (ingrédient), seules les recettes ayant comme ingrédient "coco" seront affichées. La liste des appareils et la liste des ustensiles s'adapte
+const advancedFiltering = (hashtag: string, type: string, listOfRecipes: Array<any>) => {
+    //console.log("fonction advancedfiltering: hashtag : ", hashtag,"; type: ", type, "; liste: ", listOfRecipes);
+
+    hashtag = hashtag.toLowerCase();
+
+    let resultats = [];
+    
+    switch (type) {
+        case "ingredients":
+            resultats = matchingIngredients(hashtag, listOfRecipes);
+            //console.log("resultats ingredients: ",resultats);
+            break;
+        case "appliances":
+            resultats = matchingAppliances(hashtag, listOfRecipes);
+            //console.log("resultats appliances: ",resultats);
+            break;
+        case "ustensils":
+            resultats = matchingUstensils(hashtag, listOfRecipes);
+            //console.log("resultats ustensils: ",resultats);
+            break;
+        default:
+            //console.error("type de hashtag non reconnu");
+    }
+
+    return resultats;
+}
+
 // Cette fonction prend en entrée une liste de recettes (idéalement, liste déjà filtrée, mais fonctionne avec n'importe quelle liste de résultats) et renvoie l'ensemble des ingrédients utilisés
 const ingredientsOptions = (recipes: Array<any>) => {
 
@@ -724,6 +795,143 @@ const ustensilsOptions = (recipes: Array<any>) => {
             list.push(recipes[i].ustensils[j]);
         }
     }
-    console.log(list);
     return list;
 }
+
+
+// je veux une fonction qui prend en entrée une liste et retourne la liste débarrassée des doublons. Cette fonction ne doit pas utiliser includes (prérequis projet)
+const deleteDuplicates = (list: Array<any>) => {
+    let filteredList = [];
+    for (let item of list) {
+        let alreadyIn = 0;
+        for (let i=0; i<filteredList.length; i++) {
+            if (filteredList[i] == item) {
+                alreadyIn = 1;
+                break;
+            }
+        }
+        if (alreadyIn == 0) {
+            filteredList.push(item);
+        }
+    }
+    return filteredList;
+}
+
+// je veux à présent une fonction qui supprime un mot-clé
+const deleteItem = (list: Array<any>, word: string) => {
+
+    word = word.toLowerCase();
+
+    for (let i=list.length; i>=0; i--) {
+        if (list[i] == word) {
+            list.splice(i, 1);
+        }
+    }
+    return list;
+}
+
+
+const dealWithHashtags = (event: Event, recipes: Array<any>, keywords: Array<any>, type: any) => {
+
+    const dropInputIngredients = document.getElementById("dropInput-ingredients");
+    (<HTMLInputElement>dropInputIngredients).value = '';
+    const dropInputAppliances = document.getElementById("dropInput-appliances");
+    (<HTMLInputElement>dropInputAppliances).value = '';
+    const dropInputUstensils = document.getElementById("dropInput-ustensils");
+    (<HTMLInputElement>dropInputUstensils).value = '';
+    
+
+    let uniqueIngredientsOnly = uniqueIngredients(recipes);
+    let uniqueAppliancesOnly = uniqueAppliances(recipes); // idem pour les appareils
+    let uniqueUstensilsOnly = uniqueUstensils(recipes);
+
+    // on créé à présent les menus déroulants pour chaque type de filtre avancé
+    const dropDowns = new Dropdown("ingredients",uniqueIngredientsOnly);
+
+    // la liste initiale, c'est celle de toutes les recettes (ici en tout cas)
+    let initialList = recipes;
+    // cette nouvelle liste contient uniquement les recettes associées
+    let newlist = [];
+    
+    // on récupère les hashtags, on les affiche sous forme de badge, et la fonction renvoie une liste (la liste keywords mise à jour)
+    catchSomeHashtags(event, keywords);
+    let className = (<HTMLElement>event.target).className;
+    switch (className) {
+        case "ingredients":
+        case "appliances":
+        case "ustensils":
+            type.push(className);
+            break;
+        default:
+    }
+        
+    // à présent on veut avoir une liste de résultats/recettes associée
+    // s'il n'y a qu'un seul hashtag, c'est tout simple, il suffit de sélectionner les recettes contenant le hashtag.
+    // s'il y en a plusieurs, il faut travailler de façon itérative, donc au sein de la liste trouvée, on va rechercher les termes suivants.
+    for (let i=0; i<keywords.length; i++) {
+        let thisList = [];
+        let add;
+        // = advancedFiltering(keywords[i], type[i], thisList);
+        if (i==0) {
+            thisList = initialList;
+            add = advancedFiltering(keywords[i],type[i], thisList);
+        } else {
+            thisList = newlist;
+            add = advancedFiltering(keywords[i], type[i], thisList);
+        }
+        
+        for (let j=0; j<add.length;j++) {
+            newlist = add;
+        }
+            
+        const ingredientsResults = matchingIngredients(keywords[i], newlist);
+        const AppliancesResults = matchingAppliances(keywords[i],newlist);
+        const UstensilsResults = matchingUstensils(keywords[i], newlist);
+            
+        // on va ensuite ajouter l'une après l'autre les résultats des différents filtres à la liste principale
+        alreadyIn(newlist, ingredientsResults);
+        alreadyIn(newlist, AppliancesResults);
+        alreadyIn(newlist, UstensilsResults);
+            
+        // on va maintenant supprimer les items doublons de chacune des catégories (ingrédients, appareils, ustensiles)
+        uniqueIngredientsOnly = uniqueIngredients(newlist);//,keywords[i];
+        uniqueAppliancesOnly = uniqueAppliances(newlist);
+        uniqueUstensilsOnly = uniqueUstensils(newlist);
+            
+        // ainsi que les mots-clés déjà sélectionnés
+        for (let k=0; k<keywords.length; k++) {
+            uniqueIngredientsOnly = deleteItem(uniqueIngredientsOnly, keywords[k]);
+            uniqueAppliancesOnly = deleteItem(uniqueAppliancesOnly, keywords[k]);
+            uniqueUstensilsOnly = deleteItem(uniqueUstensilsOnly, keywords[k]);
+        }
+            
+        // enfin, on créé les filtres avancés, qui contiennent un menu déroulant affichant pour chaque catégorie les éléments des recettes correspondantes.
+        dropDowns.updateDropdown("ingredients", uniqueIngredientsOnly);
+        dropDowns.updateDropdown("appliances", uniqueAppliancesOnly);
+        dropDowns.updateDropdown("ustensils", uniqueUstensilsOnly); 
+            
+        const resultSection = document.getElementById("results");
+        // on la vide, au cas où elle contiendrait déjà des informations
+        resultSection.innerHTML = "";
+            
+        // à présent qu'on a une liste "épurée", on va créer les objets associés
+        for (let i=0; i<newlist.length; i++) {
+            let recipe = new Recipe(
+                newlist[i].id,
+                newlist[i].name,
+                newlist[i].ingredients,
+                newlist[i].time,
+                newlist[i].description,
+                newlist[i].appliance,
+                newlist[i].ustensils
+            );
+            // et on les affiche 
+            recipe.displayRecipe();
+        }
+                
+        if (newlist.length == 0) {
+            resultSection.innerHTML = "Aucune recette ne correspond à votre recherche... vous pouvez essayer avec \" tarte aux pommes \", \"poisson\", etc. !";
+        } 
+                
+    }
+}        

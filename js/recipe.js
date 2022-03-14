@@ -112,12 +112,57 @@ class Recipe {
         const cardText_steps = document.createElement("p");
         cardText_steps.className = "card-text steps";
         cardText_steps.textContent = this.description;
-        /* divTop.append(divCol); */
         divCardBody.append(cardTitle_recipe, cardTitle_duration, cardText_ingredients, cardText_steps);
         divCard.append(divCardImg, divCardBody);
         divCol.append(divCard);
         resultSection.append(divCol);
         return resultSection;
+    }
+    // cette méthode prend en entrée un input et renvoie vrai si l'un des ingrédients de la recette contient l'input, faux sinon
+    hasFittingIngredient(input) {
+        input = input.toLowerCase();
+        const regex = new RegExp(input, "gi");
+        //const regex = /([A-Z])\w+\w/gi;
+        for (let i = 0; i < this["ingredients"].length; i++) {
+            if (this["ingredients"][i]["ingredient"].match(regex)) {
+                return 1;
+            }
+            ;
+        }
+    }
+    hasFittingAppliance(input) {
+        input = input.toLowerCase();
+        const regex = new RegExp(input, "gi");
+        if (this["appliance"].match(regex)) {
+            return 1;
+        }
+        ;
+    }
+    hasFittingUstensil(input) {
+        input = input.toLowerCase();
+        const regex = new RegExp(input, "gi");
+        for (let i = 0; i < this["ustensils"].length; i++) {
+            if (this["ustensils"][i].match(regex)) {
+                return 1;
+            }
+            ;
+        }
+    }
+    hasFittingDescription(input) {
+        input = input.toLowerCase();
+        const regex = new RegExp(input, "gi");
+        if (this["description"].match(regex)) {
+            return 1;
+        }
+        ;
+    }
+    hasFittingTitle(input) {
+        input = input.toLowerCase();
+        const regex = new RegExp(input, "gi");
+        if (this["name"].match(regex)) {
+            return 1;
+        }
+        ;
     }
 }
 export { Recipe };
