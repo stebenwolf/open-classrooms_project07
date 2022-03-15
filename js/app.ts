@@ -162,10 +162,15 @@ const updateResultsWithHashtags = (initialList: ListOfRecipes) => {
     const allHashtags = document.querySelectorAll(".hashtag");
     const newKeywords = [];
 
-    allHashtags.forEach(element => {
+    /* allHashtags.forEach(element => {
         const newHashtag = new Hashtag(element.textContent, element["dataset"]["hashtagtype"]);
         newKeywords.push(newHashtag);
-    });
+    }); */
+
+    for (let item of allHashtags) {
+        const newHashtag = new Hashtag(item.textContent, item["dataset"]["hashtagtype"]);
+        newKeywords.push(newHashtag);
+    }
         
     let i = 0;
     let newList = initialList;
@@ -184,7 +189,10 @@ const updateResultsWithHashtags = (initialList: ListOfRecipes) => {
 const emptySearch = (inputField: string) => {    
     const input = document.getElementById(inputField);
     const dropdownItems = document.querySelectorAll(".dropDown-item");
-    dropdownItems.forEach(element => element.addEventListener("click", () => (<HTMLInputElement>input).value = ""))
+    //dropdownItems.forEach(element => element.addEventListener("click", () => (<HTMLInputElement>input).value = ""));
+    for(let item of dropdownItems) {
+        item.addEventListener("click", () => (<HTMLInputElement>input).value = "");
+    }
     
     // fonction en standby car le dropdown ne se met pas à jour quand il est vidé...
 }
