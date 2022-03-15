@@ -154,12 +154,16 @@ class Recipe {
     hasFittingIngredient(input: string) {
         input = input.toLowerCase();
 
-        const regex = new RegExp(input, "gi")
-        //const regex = /([A-Z])\w+\w/gi;
+        let verdict = 0;
 
-        for (let i=0; i<this["ingredients"].length; i++) {
-            if (this["ingredients"][i]["ingredient"].match(regex)) { return 1 };
-        }
+        this["ingredients"].flat().forEach(item => { 
+            if (item["ingredient"].toLowerCase().includes(input)) {
+                verdict = 1;
+            }
+        })
+
+        return verdict;
+        
     }
 
     hasFittingAppliance(input: string) {

@@ -121,14 +121,13 @@ class Recipe {
     // cette méthode prend en entrée un input et renvoie vrai si l'un des ingrédients de la recette contient l'input, faux sinon
     hasFittingIngredient(input) {
         input = input.toLowerCase();
-        const regex = new RegExp(input, "gi");
-        //const regex = /([A-Z])\w+\w/gi;
-        for (let i = 0; i < this["ingredients"].length; i++) {
-            if (this["ingredients"][i]["ingredient"].match(regex)) {
-                return 1;
+        let verdict = 0;
+        this["ingredients"].flat().forEach(item => {
+            if (item["ingredient"].toLowerCase().includes(input)) {
+                verdict = 1;
             }
-            ;
-        }
+        });
+        return verdict;
     }
     hasFittingAppliance(input) {
         input = input.toLowerCase();
