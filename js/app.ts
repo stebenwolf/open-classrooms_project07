@@ -7,6 +7,8 @@ import { Dropdown } from "./dropdown.js";
 import { ListOfRecipes } from "./listOfRecipes.js";
 import { Hashtag } from "./hashtag.js";
 
+const start = Date.now();
+
 // on génère le contenu de la page HTML
 const doc = new Init;
 doc.generateContent();
@@ -151,7 +153,13 @@ const updateInterface = (inputList: ListOfRecipes, keywords: Array<Hashtag>) => 
         const input = (<HTMLInputElement>element.target).value.toLowerCase();
         const newList = dropDownUstensils.search(input); 
         dropDownUstensils.updateDropdown("ustensils",newList);
-    });    
+    });
+
+    const end = Date.now();
+    const duration = end - start;
+    console.log("Démarrage: ",start);
+    console.log("Fin: ", end);
+    console.log("Durée: ",duration);
         
     return {inputList, listOfIngredients, listOfAppliances, listOfUstensils};
 }
