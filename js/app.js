@@ -5,7 +5,6 @@ import { Recipe } from "./recipe.js";
 import { Dropdown } from "./dropdown.js";
 import { ListOfRecipes } from "./listOfRecipes.js";
 import { Hashtag } from "./hashtag.js";
-const start = Date.now();
 // on génère le contenu de la page HTML
 const doc = new Init;
 doc.generateContent();
@@ -20,6 +19,7 @@ async function fetchDataAsync() {
     }
 }
 fetchDataAsync().then(recipes => {
+    const start = Date.now();
     // on créé une variable qui stocke tous les mots-clés/hashtags.
     const keywords = [];
     let initialList = recipes;
@@ -59,6 +59,11 @@ fetchDataAsync().then(recipes => {
             updateResultsWithHashtags(newlist);
         });
     });
+    const end = Date.now();
+    const duration = end - start;
+    console.log("Démarrage: ", start);
+    console.log("Fin: ", end);
+    console.log("Durée: ", duration);
 });
 /* ----------- FIN DE LA FONCTION PRINCIPALE ----------------- */
 // Fonction updateInterface() : gère la mise à jour de l'interface principale (liste des recettes, contenu des filtres) à chaque changement au niveau de l'input principal ou des hashtags (ajout/suppression)
@@ -123,11 +128,6 @@ const updateInterface = (inputList, keywords) => {
         const newList = dropDownUstensils.search(input);
         dropDownUstensils.updateDropdown("ustensils", newList);
     });
-    const end = Date.now();
-    const duration = end - start;
-    console.log("Démarrage: ", start);
-    console.log("Fin: ", end);
-    console.log("Durée: ", duration);
     return { inputList, listOfIngredients, listOfAppliances, listOfUstensils };
 };
 // cette fonction est utilisée par les event listeners des hashtags. Lorsqu'on ajoute, supprime ou clique dans la zone des hashtags, cette fonction va faire la liste des hashtags existants et met à jour l'interface en fonction.

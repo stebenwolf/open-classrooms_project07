@@ -132,8 +132,9 @@ class Recipe {
                     unit = " "+unit;
                 }
                 liIngredients.textContent = ingredient+quantity+unit;
-            ulIngredients.append(liIngredients);
-        }});
+                ulIngredients.append(liIngredients);
+            }
+        });
         cardText_ingredients.append(ulIngredients);
 
         const cardText_steps = document.createElement("p");
@@ -157,7 +158,7 @@ class Recipe {
         //const regex = /([A-Z])\w+\w/gi;
 
         this["ingredients"].forEach(item => {
-            if (item["ingredient"].match(regex)) { return 1}
+            if (item['ingredient'].match(regex)) { return 1 }
         });
     }
 
@@ -175,7 +176,7 @@ class Recipe {
         const regex = new RegExp(input, "gi");
 
         this["ustensils"].forEach(item => {
-            if (item.match(regex)) { return 1}
+            if (item.match(regex)) { return 1 }
         });
     }
 

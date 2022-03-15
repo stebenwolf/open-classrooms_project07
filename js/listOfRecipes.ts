@@ -72,7 +72,7 @@ class ListOfRecipes extends Array {
         this.forEach(item => {
             if (item.hasFittingIngredient(input)) {
                 results.push(item);
-        }})
+        }});
         return results;
     }
 }

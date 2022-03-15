@@ -7,8 +7,6 @@ import { Dropdown } from "./dropdown.js";
 import { ListOfRecipes } from "./listOfRecipes.js";
 import { Hashtag } from "./hashtag.js";
 
-const start = Date.now();
-
 // on génère le contenu de la page HTML
 const doc = new Init;
 doc.generateContent();
@@ -25,6 +23,8 @@ async function fetchDataAsync() {
 }
 
 fetchDataAsync().then(recipes => {
+
+    const start = Date.now();
 
     // on créé une variable qui stocke tous les mots-clés/hashtags.
     const keywords = [];
@@ -81,6 +81,12 @@ fetchDataAsync().then(recipes => {
             updateResultsWithHashtags(newlist);
         })
     });
+
+    const end = Date.now();
+    const duration = end - start;
+    console.log("Démarrage: ",start);
+    console.log("Fin: ", end);
+    console.log("Durée: ",duration);
 
 });
 /* ----------- FIN DE LA FONCTION PRINCIPALE ----------------- */
@@ -154,12 +160,6 @@ const updateInterface = (inputList: ListOfRecipes, keywords: Array<Hashtag>) => 
         const newList = dropDownUstensils.search(input); 
         dropDownUstensils.updateDropdown("ustensils",newList);
     });
-
-    const end = Date.now();
-    const duration = end - start;
-    console.log("Démarrage: ",start);
-    console.log("Fin: ", end);
-    console.log("Durée: ",duration);
         
     return {inputList, listOfIngredients, listOfAppliances, listOfUstensils};
 }

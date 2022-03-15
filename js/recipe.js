@@ -124,7 +124,7 @@ class Recipe {
         const regex = new RegExp(input, "gi");
         //const regex = /([A-Z])\w+\w/gi;
         this["ingredients"].forEach(item => {
-            if (item["ingredient"].match(regex)) {
+            if (item['ingredient'].match(regex)) {
                 return 1;
             }
         });
