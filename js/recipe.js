@@ -69,16 +69,16 @@ class Recipe {
         const cardText_ingredients = document.createElement("p");
         cardText_ingredients.className = "card-text ingredients";
         const ulIngredients = document.createElement("ul");
-        for (let i = 0; i < this.ingredients.length; i++) {
+        this.ingredients.forEach(item => {
             const liIngredients = document.createElement("li");
-            const ingredient = this.ingredients[i]["ingredient"];
+            const ingredient = item["ingredient"];
             let quantity = "";
-            if (this.ingredients[i]["quantity"]) {
-                quantity = " : " + this.ingredients[i]["quantity"];
+            if (item["quantity"]) {
+                quantity = " : " + item["quantity"];
             }
             let unit = "";
-            if (this.ingredients[i]["unit"]) {
-                unit = this.ingredients[i]["unit"];
+            if (item["unit"]) {
+                unit = item["unit"];
                 switch (unit) {
                     case "grammes":
                         unit = "g";
@@ -104,10 +104,10 @@ class Recipe {
                 if (unit.length > 2) {
                     unit = " " + unit;
                 }
+                liIngredients.textContent = ingredient + quantity + unit;
+                ulIngredients.append(liIngredients);
             }
-            liIngredients.textContent = ingredient + quantity + unit;
-            ulIngredients.append(liIngredients);
-        }
+        });
         cardText_ingredients.append(ulIngredients);
         const cardText_steps = document.createElement("p");
         cardText_steps.className = "card-text steps";
@@ -123,12 +123,11 @@ class Recipe {
         input = input.toLowerCase();
         const regex = new RegExp(input, "gi");
         //const regex = /([A-Z])\w+\w/gi;
-        for (let i = 0; i < this["ingredients"].length; i++) {
-            if (this["ingredients"][i]["ingredient"].match(regex)) {
+        this["ingredients"].forEach(item => {
+            if (item["ingredient"].match(regex)) {
                 return 1;
             }
-            ;
-        }
+        });
     }
     hasFittingAppliance(input) {
         input = input.toLowerCase();
@@ -141,12 +140,11 @@ class Recipe {
     hasFittingUstensil(input) {
         input = input.toLowerCase();
         const regex = new RegExp(input, "gi");
-        for (let i = 0; i < this["ustensils"].length; i++) {
-            if (this["ustensils"][i].match(regex)) {
+        this["ustensils"].forEach(item => {
+            if (item.match(regex)) {
                 return 1;
             }
-            ;
-        }
+        });
     }
     hasFittingDescription(input) {
         input = input.toLowerCase();

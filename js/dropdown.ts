@@ -132,11 +132,12 @@ class Dropdown {
         const list = [];
         const regex = new RegExp(input, "gi");
 
-        for (let item of this.list) {
-            if(item.match(regex)) {
-                list.push(item);
+        this.list.forEach(element => {
+            if (element.match(regex)) { 
+                list.push(element);
             }
-        }
+        });
+
         return list;
     }
 }

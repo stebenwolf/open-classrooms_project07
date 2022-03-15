@@ -24,10 +24,9 @@ fetchDataAsync().then(recipes => {
     let initialList = recipes;
     let actualList = new ListOfRecipes([]);
     // on commence par créer, pour l'ensemble des recettes, un objet dédié
-    for (let i = 0; i < initialList.length; i++) {
-        let recipe = new Recipe(initialList[i].id, initialList[i].name, initialList[i].ingredients, initialList[i].time, initialList[i].description, initialList[i].appliance, initialList[i].ustensils);
-        actualList.push(recipe);
-    }
+    initialList.forEach(element => {
+        actualList.push(new Recipe(element.id, element.name, element.ingredients, element.time, element.description, element.appliance, element.ustensils));
+    });
     // A chaque fois qu'on aura un changement soit au niveau de l'input principal, soit au niveau des hashtags (ajout ou suppression), on va avoir la même séquence : création d'une liste de recette, affichage des recettes, mise à jour des filtres avancés.
     updateInterface(actualList, keywords);
     // on cible le champ de recherche principal
@@ -49,8 +48,8 @@ fetchDataAsync().then(recipes => {
     });
     const dropdowns = [];
     dropdowns.push(document.getElementById("dropdown-ingredients"), document.getElementById("dropdown-appliances"), document.getElementById("dropdown-ustensils"));
-    for (let i = 0; i < dropdowns.length; i++) {
-        dropdowns[i].addEventListener("click", () => {
+    dropdowns.forEach(element => {
+        element.addEventListener("click", () => {
             const input = document.getElementById("mainSearchInput").value;
             let newlist = actualList;
             if (input.length > 0) {
@@ -58,7 +57,7 @@ fetchDataAsync().then(recipes => {
             }
             updateResultsWithHashtags(newlist);
         });
-    }
+    });
 });
 /* ----------- FIN DE LA FONCTION PRINCIPALE ----------------- */
 // Fonction updateInterface() : gère la mise à jour de l'interface principale (liste des recettes, contenu des filtres) à chaque changement au niveau de l'input principal ou des hashtags (ajout/suppression)

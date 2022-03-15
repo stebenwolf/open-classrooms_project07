@@ -18,47 +18,42 @@ class ListOfRecipes extends Array {
 
     // Cette méthode affiche toutes les recettes de la liste
     displayRecipes() {
-        for (let item of this) {
-            item.displayRecipe();
-        }
+        this.map(item => item.displayRecipe());
+
         return this;
     }
     
     // cette méthode va extraire l'ensemble des ingrédients d'une liste de recettes
     extractIngredients() {
         const listOfIngredients = new ListOfItems([]);
-        for (let recette of this) {
-            for (let i=0;i<recette["ingredients"].length;i++) {
-                listOfIngredients.push(recette["ingredients"][i].ingredient);
-            }
-        }
+        this.forEach(recette => {
+            recette["ingredients"].forEach(item => {
+                listOfIngredients.push(item.ingredient);
+            })
+        })
         return listOfIngredients;
     }
 
     // cette méthode va extraire l'ensemble des appliances d'une liste de recettes
     extractAppliances() {
         const listOfAppliances = new ListOfItems([]);
-        for (let recette of this) {
-            listOfAppliances.push(recette["appliance"]);
-        }
+        this.forEach(recette => listOfAppliances.push(recette["appliance"]));
         return listOfAppliances;
     }
 
     // cette méthode va extraire l'ensemble des ustensiles d'une liste de recettes
     extractUstensils() {
         const listOfUstensils = new ListOfItems([]);
-        for (let recette of this) {
-            for (let i=0; i<recette["ustensils"].length;i++) {
-                listOfUstensils.push(recette["ustensils"][i]);
-            }
-        }
+        this.forEach(recette => {
+            recette["ustensils"].forEach(item => listOfUstensils.push(item));
+        })
         return listOfUstensils;
     }
 
     // cette méthode prend en entrée un input et renvoie l'ensemble des recettes contenant cet input : soit dans les ingrédients, soit dans les appareils, soit dans les ustensiles, soit dans la description, soit dans le titre
     matchingRecipes(input: string) {
         const results = new ListOfRecipes([]);
-        for (let item of this) {
+        this.forEach(item => {
             if (item.hasFittingIngredient(input) 
                 || item.hasFittingAppliance(input)
                 || item.hasFittingUstensil(input)
@@ -67,18 +62,17 @@ class ListOfRecipes extends Array {
                 ) {
                 results.push(item);
             };
-        }
+        })
         return results;
     }
 
     matchesIngredients(input: string) {
         console.log(this);
         const results = new ListOfRecipes([]);
-        for (let item of this) {
+        this.forEach(item => {
             if (item.hasFittingIngredient(input)) {
                 results.push(item);
-            }
-        }
+        }})
         return results;
     }
 }

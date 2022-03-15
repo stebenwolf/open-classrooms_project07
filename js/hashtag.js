@@ -36,8 +36,6 @@ class Hashtag {
         hashtags.append(hashtagDiv);
         closeButton.addEventListener("click", () => {
             hashtagDiv.remove();
-            /* const hashtagToRemove = new Hashtag(currentItem["name"], currentItem["type"]);
-            return hashtagToRemove; */
         });
         return hashtags;
     }
