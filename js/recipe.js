@@ -135,10 +135,7 @@ class Recipe {
         const regex = new RegExp(input, "gi");
         //const regex = /([A-Z])\w+\w/gi;
         for (let i = 0; i < this["ingredients"].length; i++) {
-            if (this["ingredients"][i]["ingredient"].match(regex)) {
-                return 1;
-            }
-            ;
+            return this["ingredients"][i]["ingredient"].match(regex);
         }
     }
     hasFittingAppliance(input) {

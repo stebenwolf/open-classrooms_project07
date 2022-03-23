@@ -172,7 +172,7 @@ class Recipe {
         //const regex = /([A-Z])\w+\w/gi;
 
         for (let i=0; i<this["ingredients"].length; i++) {
-            if (this["ingredients"][i]["ingredient"].match(regex)) { return 1 };
+            return this["ingredients"][i]["ingredient"].match(regex);
         }
     }
 
@@ -204,7 +204,6 @@ class Recipe {
 
     hasFittingTitle(input: string) {
         input = input.toLowerCase();
-
         const regex = new RegExp(input, "gi");
 
         if (this["name"].match(regex)) { return 1 };
