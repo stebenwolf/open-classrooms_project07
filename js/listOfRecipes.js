@@ -48,11 +48,11 @@ class ListOfRecipes extends Array {
         input = input.toLowerCase();
         const regex = new RegExp(input, "gi");
         for (let item of this) {
-            if (item.hasFittingIngredient(input)
-                || item.hasFittingAppliance(input)
-                || item.hasFittingUstensil(input)
-                || item.hasFittingDescription(input)
-                || item.hasFittingTitle(input)) {
+            if (item.hasFittingIngredient(regex)
+                || item.hasFittingAppliance(regex)
+                || item.hasFittingUstensil(regex)
+                || item.hasFittingDescription(regex)
+                || item.hasFittingTitle(regex)) {
                 results.push(item);
             }
             ;
