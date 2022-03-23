@@ -59,16 +59,6 @@ class ListOfRecipes extends Array {
         }
         return results;
     }
-    matchesIngredients(input) {
-        console.log(this);
-        const results = new ListOfRecipes([]);
-        for (let item of this) {
-            if (item.hasFittingIngredient(input)) {
-                results.push(item);
-            }
-        }
-        return results;
-    }
 }
 export { ListOfRecipes };
 //# sourceMappingURL=listOfRecipes.js.map
