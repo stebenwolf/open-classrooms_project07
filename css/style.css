@@ -45,6 +45,78 @@ body {
   -webkit-box-shadow: 1px 2px 4px #e8e8e8;
           box-shadow: 1px 2px 4px #e8e8e8;
   background-color: #e7e7e7;
+  -webkit-animation: shadowOut 0.5s forwards;
+          animation: shadowOut 0.5s forwards;
+}
+
+.card:hover {
+  cursor: pointer;
+  -webkit-animation: shadowIn 0.15s forwards;
+          animation: shadowIn 0.15s forwards;
+}
+
+@-webkit-keyframes shadowIn {
+  from {
+    -webkit-box-shadow: 1px 2px 4px #e8e8e8;
+            box-shadow: 1px 2px 4px #e8e8e8;
+    -webkit-transform: translateY(0em);
+            transform: translateY(0em);
+  }
+  to {
+    -webkit-box-shadow: 1px 2px 4px #e8e8e8, 2px 4px 4px #e8e8e8, 3px 6px 4px #e8e8e8;
+            box-shadow: 1px 2px 4px #e8e8e8, 2px 4px 4px #e8e8e8, 3px 6px 4px #e8e8e8;
+    -webkit-transform: translateY(-0.25em);
+            transform: translateY(-0.25em);
+    background-color: white;
+  }
+}
+
+@keyframes shadowIn {
+  from {
+    -webkit-box-shadow: 1px 2px 4px #e8e8e8;
+            box-shadow: 1px 2px 4px #e8e8e8;
+    -webkit-transform: translateY(0em);
+            transform: translateY(0em);
+  }
+  to {
+    -webkit-box-shadow: 1px 2px 4px #e8e8e8, 2px 4px 4px #e8e8e8, 3px 6px 4px #e8e8e8;
+            box-shadow: 1px 2px 4px #e8e8e8, 2px 4px 4px #e8e8e8, 3px 6px 4px #e8e8e8;
+    -webkit-transform: translateY(-0.25em);
+            transform: translateY(-0.25em);
+    background-color: white;
+  }
+}
+
+@-webkit-keyframes shadowOut {
+  from {
+    -webkit-box-shadow: 1px 2px 4px #e8e8e8, 2px 4px 4px #e8e8e8, 3px 6px 4px #e8e8e8;
+            box-shadow: 1px 2px 4px #e8e8e8, 2px 4px 4px #e8e8e8, 3px 6px 4px #e8e8e8;
+    -webkit-transform: translateY(-0.25em);
+            transform: translateY(-0.25em);
+    background-color: white;
+  }
+  to {
+    -webkit-box-shadow: 1px 2px 4px #e8e8e8;
+            box-shadow: 1px 2px 4px #e8e8e8;
+    -webkit-transform: translateY(0em);
+            transform: translateY(0em);
+  }
+}
+
+@keyframes shadowOut {
+  from {
+    -webkit-box-shadow: 1px 2px 4px #e8e8e8, 2px 4px 4px #e8e8e8, 3px 6px 4px #e8e8e8;
+            box-shadow: 1px 2px 4px #e8e8e8, 2px 4px 4px #e8e8e8, 3px 6px 4px #e8e8e8;
+    -webkit-transform: translateY(-0.25em);
+            transform: translateY(-0.25em);
+    background-color: white;
+  }
+  to {
+    -webkit-box-shadow: 1px 2px 4px #e8e8e8;
+            box-shadow: 1px 2px 4px #e8e8e8;
+    -webkit-transform: translateY(0em);
+            transform: translateY(0em);
+  }
 }
 
 .card-title.duration {
