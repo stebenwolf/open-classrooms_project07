@@ -44,7 +44,55 @@ body {
     margin: 0;
     padding: 0;
     box-shadow: 1px 2px 4px hsl(0, 0%, 91%);
+    background-color: rgb(231,231,231);
 }
+
+.card-title.duration {
+    font-weight: bold;
+    font-size: 0.95rem;
+    width: 30%;
+    text-align: right;
+}
+
+.card-text.ingredients ul {
+    padding-left: 0;
+}
+.card-text.ingredients li {
+    list-style-type: none;
+}
+.ingredientItem {
+    font-weight: bold;
+}
+
+.cardTitle {
+    display: flex;
+    justify-content: space-between;
+}
+
+.cardTitle h5 {
+    font-size: 1rem;
+}
+
+.cardText {
+    display: flex;
+    justify-content: space-between;
+    
+    font-size: 0.85rem;
+    letter-spacing: 0.005rem;
+    line-height: 1.2rem;
+    max-height: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.card-text.ingredients {
+    width: 38%;
+}
+.card-text.steps {
+    width: 57%;
+    max-block-size: 25%;
+    white-space: normal;
+}
+
 
 @media screen and (min-width:768px) {
     .logo {

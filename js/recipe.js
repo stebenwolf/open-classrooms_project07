@@ -60,17 +60,24 @@ class Recipe {
         divCardImg.alt = this.name;
         const divCardBody = document.createElement("div");
         divCardBody.className = "card-body";
+        const cardTitle = document.createElement("div");
+        cardTitle.className = "cardTitle";
         const cardTitle_recipe = document.createElement("h5");
         cardTitle_recipe.className = "card-title recipe";
         cardTitle_recipe.textContent = this.name;
         const cardTitle_duration = document.createElement("h5");
         cardTitle_duration.className = "card-title duration";
         cardTitle_duration.innerHTML = "<i class=\"far fa-clock\"></i> " + this.time + " min";
+        const cardText = document.createElement("div");
+        cardText.className = "cardText";
         const cardText_ingredients = document.createElement("p");
         cardText_ingredients.className = "card-text ingredients";
         const ulIngredients = document.createElement("ul");
         for (let i = 0; i < this.ingredients.length; i++) {
             const liIngredients = document.createElement("li");
+            const ingredientSpan = document.createElement("span");
+            ingredientSpan.className = "ingredientItem";
+            const quantitySpan = document.createElement("span");
             const ingredient = this.ingredients[i]["ingredient"];
             let quantity = "";
             if (this.ingredients[i]["quantity"]) {
@@ -105,14 +112,18 @@ class Recipe {
                     unit = " " + unit;
                 }
             }
-            liIngredients.textContent = ingredient + quantity + unit;
+            ingredientSpan.textContent = ingredient;
+            quantitySpan.textContent = quantity + unit;
+            liIngredients.append(ingredientSpan, quantitySpan);
             ulIngredients.append(liIngredients);
         }
         cardText_ingredients.append(ulIngredients);
         const cardText_steps = document.createElement("p");
         cardText_steps.className = "card-text steps";
         cardText_steps.textContent = this.description;
-        divCardBody.append(cardTitle_recipe, cardTitle_duration, cardText_ingredients, cardText_steps);
+        cardTitle.append(cardTitle_recipe, cardTitle_duration);
+        cardText.append(cardText_ingredients, cardText_steps);
+        divCardBody.append(cardTitle, cardText);
         divCard.append(divCardImg, divCardBody);
         divCol.append(divCard);
         resultSection.append(divCol);
