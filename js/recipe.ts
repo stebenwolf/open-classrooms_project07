@@ -165,48 +165,28 @@ class Recipe {
     }
 
     // cette méthode prend en entrée un input et renvoie vrai si l'un des ingrédients de la recette contient l'input, faux sinon
-    hasFittingIngredient(input: string) {
-        input = input.toLowerCase();
-
-        const regex = new RegExp(input, "gi")
-        //const regex = /([A-Z])\w+\w/gi;
-
+    hasFittingIngredient(regex: RegExp) {
         for (let i=0; i<this["ingredients"].length; i++) {
             return this["ingredients"][i]["ingredient"].match(regex);
         }
     }
 
-    hasFittingAppliance(input: string) {
-        input = input.toLowerCase();
-
-        const regex = new RegExp(input, "gi");
-
-        if(this["appliance"].match(regex)) { return 1 };
+    hasFittingAppliance(regex: RegExp) {
+        return this["appliance"].match(regex);
     }
 
-    hasFittingUstensil(input: string) {
-        input = input.toLowerCase();
-
-        const regex = new RegExp(input, "gi");
-
+    hasFittingUstensil(regex: RegExp) {
         for (let i=0; i<this["ustensils"].length; i++) {
-            if (this["ustensils"][i].match(regex)) { return 1 };
+            return this["ustensils"][i].match(regex);
         }
     }
 
-    hasFittingDescription(input: string) {
-        input = input.toLowerCase();
-
-        const regex = new RegExp(input, "gi");
-
-        if (this["description"].match(regex)) { return 1 };
+    hasFittingDescription(regex: RegExp) {
+        return this["description"].match(regex);
     }
 
-    hasFittingTitle(input: string) {
-        input = input.toLowerCase();
-        const regex = new RegExp(input, "gi");
-
-        if (this["name"].match(regex)) { return 1 };
+    hasFittingTitle(regex: RegExp) {
+        return this["name"].match(regex);
     }
 
 }

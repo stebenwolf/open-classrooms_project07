@@ -45,6 +45,8 @@ class ListOfRecipes extends Array {
     // cette méthode prend en entrée un input et renvoie l'ensemble des recettes contenant cet input : soit dans les ingrédients, soit dans les appareils, soit dans les ustensiles, soit dans la description, soit dans le titre
     matchingRecipes(input) {
         const results = new ListOfRecipes([]);
+        input = input.toLowerCase();
+        const regex = new RegExp(input, "gi");
         for (let item of this) {
             if (item.hasFittingIngredient(input)
                 || item.hasFittingAppliance(input)
