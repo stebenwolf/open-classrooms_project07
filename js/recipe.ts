@@ -78,7 +78,7 @@ class Recipe {
         divCard.setAttribute("style","");
 
         const divCardImg = document.createElement("img");
-        divCardImg.src = "../assets/img/"+this.id+".jpg";
+        divCardImg.src = "assets/img/"+this.id+".jpg";
         divCardImg.className = "card-img-top";
         divCardImg.alt = this.name;
 
