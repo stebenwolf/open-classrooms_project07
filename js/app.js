@@ -19,7 +19,6 @@ async function fetchDataAsync() {
     }
 }
 fetchDataAsync().then(recipes => {
-    const start = Date.now();
     // on créé une variable qui stocke tous les mots-clés/hashtags.
     const keywords = [];
     let initialList = recipes;
@@ -59,11 +58,6 @@ fetchDataAsync().then(recipes => {
             updateResultsWithHashtags(newlist);
         });
     });
-    const end = Date.now();
-    const duration = end - start;
-    console.log("Démarrage: ", start);
-    console.log("Fin: ", end);
-    console.log("Durée: ", duration);
 });
 /* ----------- FIN DE LA FONCTION PRINCIPALE ----------------- */
 // Fonction updateInterface() : gère la mise à jour de l'interface principale (liste des recettes, contenu des filtres) à chaque changement au niveau de l'input principal ou des hashtags (ajout/suppression)

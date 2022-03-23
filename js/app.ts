@@ -24,8 +24,6 @@ async function fetchDataAsync() {
 
 fetchDataAsync().then(recipes => {
 
-    const start = Date.now();
-
     // on créé une variable qui stocke tous les mots-clés/hashtags.
     const keywords = [];
 
@@ -81,12 +79,6 @@ fetchDataAsync().then(recipes => {
             updateResultsWithHashtags(newlist);
         })
     });
-
-    const end = Date.now();
-    const duration = end - start;
-    console.log("Démarrage: ",start);
-    console.log("Fin: ", end);
-    console.log("Durée: ",duration);
 
 });
 /* ----------- FIN DE LA FONCTION PRINCIPALE ----------------- */

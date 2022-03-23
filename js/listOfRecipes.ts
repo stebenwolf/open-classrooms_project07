@@ -53,26 +53,14 @@ class ListOfRecipes extends Array {
     // cette méthode prend en entrée un input et renvoie l'ensemble des recettes contenant cet input : soit dans les ingrédients, soit dans les appareils, soit dans les ustensiles, soit dans la description, soit dans le titre
     matchingRecipes(input: string) {
         const results = new ListOfRecipes([]);
-        this.forEach(item => {
-            if (item.hasFittingIngredient(input) 
-                || item.hasFittingAppliance(input)
-                || item.hasFittingUstensil(input)
-                || item.hasFittingDescription(input)
-                || item.hasFittingTitle(input)
-                ) {
-                results.push(item);
-            };
-        })
-        return results;
-    }
-
-    matchesIngredients(input: string) {
-        console.log(this);
-        const results = new ListOfRecipes([]);
-        this.forEach(item => {
-            if (item.hasFittingIngredient(input)) {
-                results.push(item);
-        }});
+        const regex = new RegExp(input, "gi");
+        
+        this.filter(item => item.hasFittingIngredient(regex) 
+        || item.hasFittingAppliance(regex)
+        || item.hasFittingUstensil(regex)
+        || item.hasFittingDescription(regex)
+        || item.hasFittingTitle(regex)).map(item => results.push(item));
+       
         return results;
     }
 }
