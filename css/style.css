@@ -281,6 +281,8 @@ body {
 .dropdown-stuff {
   float: left;
   overflow: hidden;
+  margin-right: 20px;
+  border-radius: 5px;
 }
 
 .dropdown-stuff .dropbtn-stuff {
@@ -290,6 +292,34 @@ body {
   color: white;
   background-color: inherit;
   margin: 0;
+}
+
+#ingredientsList {
+  background-color: #3282f7 !important;
+}
+
+#appliancesList {
+  background-color: #68d9a4 !important;
+}
+
+#ustensilsList {
+  background-color: #ed6454 !important;
+}
+
+#appliancesList .search-stuff::-webkit-input-placeholder {
+  color: #757575 !important;
+}
+
+#appliancesList .search-stuff:-ms-input-placeholder {
+  color: #757575 !important;
+}
+
+#appliancesList .search-stuff::-ms-input-placeholder {
+  color: #757575 !important;
+}
+
+#appliancesList .search-stuff::placeholder {
+  color: #757575 !important;
 }
 
 .dropdown-content-stuff {
@@ -304,6 +334,10 @@ body {
 
 .dropdown-stuff:hover .dropdown-content-stuff {
   display: block;
+}
+
+.dropDown-item {
+  line-height: 0.5rem;
 }
 
 /* Create three equal columns that floats next to each other */
