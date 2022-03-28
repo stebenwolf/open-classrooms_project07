@@ -52,7 +52,12 @@ fetchDataAsync().then(recipes => {
     // à chaque modification de l'input, on actualise l'interface: liste des recettes affichées et contenu des dropdowns
     searchInput.addEventListener("input", element => {
         const input = element.target.value.toLowerCase();
-        const newList = actualList.matchingRecipes(input); 
+        let newList;
+        if (input.length>=3) {
+            newList = actualList.matchingRecipes(input)
+        } else {
+            newList = actualList;
+        }
         updateResultsWithHashtags(newList);
     });
 
@@ -61,8 +66,10 @@ fetchDataAsync().then(recipes => {
     hashtagsZone.addEventListener("click", () => {
         const input = (<HTMLInputElement>document.getElementById("mainSearchInput")).value;
         let newlist = actualList;
-        if (input.length > 0) {
+        if (input.length >= 3) {
             newlist = actualList.matchingRecipes(input);
+        } else {
+            newlist = actualList;
         }
         updateResultsWithHashtags(newlist);
     });
