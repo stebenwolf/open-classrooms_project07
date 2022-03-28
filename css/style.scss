@@ -211,6 +211,10 @@ body {
   .dropdown-stuff {
     float: left;
     overflow: hidden;
+    
+    margin-right: 20px;
+    border-radius: 5px;
+    
   }
   
   .dropdown-stuff .dropbtn-stuff {
@@ -222,7 +226,23 @@ body {
     background-color: inherit;
     margin: 0;
   }
-          
+
+  #ingredientsList {
+    background-color: rgb(50,130,247) !important;
+  }
+
+  #appliancesList {
+    background-color: rgb(104, 217, 164) !important;
+  }
+
+  #ustensilsList {
+      background-color: rgb(237,100,84) !important;
+  }
+
+  #appliancesList .search-stuff::placeholder{
+      color: rgb(117, 117, 117) !important;
+  }
+
   .dropdown-content-stuff {
     display: none;
     z-index: 1;
@@ -235,6 +255,10 @@ body {
   
   .dropdown-stuff:hover .dropdown-content-stuff {
     display: block;
+  }
+
+  .dropDown-item {
+      line-height: 0.5rem;
   }
   
   /* Create three equal columns that floats next to each other */
